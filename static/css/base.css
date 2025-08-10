@@ -1,0 +1,49 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+    transition: .4s;
+    font-family: "Libertinus Sans", sans-serif;
+}
+body{
+    width: 100%;
+    height: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--body-bg);
+    overflow-x: hidden;
+}
+
+a, 
+button{
+    cursor: pointer;
+}
+
+section{
+    width: 100%;
+    height: 100vh;
+    /* border: solid #000; */
+    position: relative;
+}
+
+p, 
+a, 
+button{
+    font-size: 1.7vw;
+}
+
+h1{
+    font-size: 3vw;
+}
+h2{
+    font-size: 2.5vw;
+}
+h3{
+    font-size: 2vw;
+}
+
+

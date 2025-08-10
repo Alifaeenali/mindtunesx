@@ -1,0 +1,39 @@
+.container {
+    width: 98%;
+    /* max-width: 600px;  */
+    height: 2px; 
+    background-color: #949292;
+    position: relative;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.bar {
+    width: 25%;
+    height: 100%;
+    background-color: #ff007f; 
+    position: absolute;
+    top: 0;
+    left: -50%;
+    border-radius: 2px;
+    animation: moveBar 2s ease-in-out infinite;
+}
+
+@keyframes moveBar {
+    0% {
+        transform: translateX(0%); /* Bar is at the start (off-screen left) */
+    }
+    50% {
+        transform: translateX(300%); /* Bar is at the middle (off-screen right) */
+    }
+    100% {
+        transform: translateX(600%); /* Bar is at the end (far off-screen right, ready to restart) */
+    }
+}
+
+
+/* 
+<div class="container">
+     <div class="bar"></div>
+</div>
+*/

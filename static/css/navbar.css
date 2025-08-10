@@ -1,0 +1,160 @@
+:root{
+    --text-normal :  #ffffffb3; 
+    --text-hover: #fff; 
+    --pink-shade: #ff007f; 
+    --nav-bg: #213337; 
+    --body-bg : rgb(26, 34, 36); 
+    --sec-bg1 : #e6e9ed; 
+}
+
+nav{
+width: 98%;
+display: flex;
+align-items: center;
+justify-content: space-between;
+height: 10vh;
+padding: 5px 10px;
+position: fixed;
+z-index: 100;
+top: 10px;
+border-radius: 10px;
+background: var(--nav-bg);
+transition: top 0.3s ease, opacity 0.3s ease;
+}
+
+#navbar.hidden {
+    top: -100px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.logo{
+    width: 15%;
+    height: 3.5vw;
+    display: flex;
+    transition: 0s;
+}
+
+.logo img{
+    width: 100%;
+    object-fit: fill;
+    transition: 0s;
+}
+nav ul{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 60%;
+    transition: .4s;
+}
+nav ul li a{
+    color: var(--text-normal);
+    color: var(--text-normal);
+    text-decoration: none;
+    padding-bottom: 5px;
+    position: relative;
+}
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: var(--pink-shade);
+    left: 0;
+    bottom: 0;
+    transform: scaleX(0); /* Initially scale to 0 width */
+    transform-origin: bottom left;
+    transition: transform 0.3s ease-in-out;
+}
+
+nav ul li:hover a::after {
+    transform: scaleX(1); /* Scale to 100% width on hover */
+    transform-origin: bottom left;
+}
+
+nav ul li:hover a{
+    color: var(--text-hover);
+}
+
+.logo .hidden{
+    display: none;
+}
+
+@media (max-width: 760px) {
+    nav{
+        flex-direction: column;
+        min-height: 10vh;
+        height: auto;
+        align-items: start;
+        justify-content: space-around;
+        gap: 10px;
+        top: 0;
+        width: 100%;
+        border-radius: 0px;
+        padding: 5px;
+    }
+
+    .logo{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 40px;
+    }
+    
+    .logo img{
+        width: 15%;
+        object-fit: fill;
+
+    }
+
+    .logo .hidden{
+        display: flex;
+    }
+    .logo .hidden .closeNav{
+        display: none;
+    }
+    nav ul{
+        width: 100%;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: start;
+        gap: 5px;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-in-out, 
+        opacity 0.4s ease-in-out;
+    }
+    nav ul li{
+        padding: 5px;
+        width: 100%;
+        border-bottom: solid var(--text-normal);
+    }
+
+    .logo .hidden{
+        display: flex;
+        gap: 10px; /* Adjust gap as needed */
+    }
+
+    .logo .hidden .closeNav{
+        display: none; /* Hide the close icon by default */
+    }
+    
+    .logo .hidden .openNav{
+        display: flex; 
+    }
+
+    nav ul{
+        /* existing styles... */
+        display: none; /* Hide the navigation menu by default */
+    }
+
+    nav ul.active{
+        display: flex; /* Show the menu when the 'active' class is applied */
+        max-height: 500px; /* A value large enough to fit all menu items */
+        opacity: 1;
+    }
+}
+
+

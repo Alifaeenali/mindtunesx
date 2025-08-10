@@ -1,0 +1,193 @@
+.innovation {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    background-color: #e6e9ed;
+    overflow: hidden; 
+    /* border-radius: 0px 0px 25px 25px; */
+    padding: 10px;
+    padding-bottom: 30px;
+}
+
+.innovation-cont {
+    flex: 1; 
+    min-width: 300px; 
+    padding: 50px 40px;
+    box-sizing: border-box;
+}
+
+/* Header Section Styling */
+.header-section {
+    margin-bottom: 30px;
+}
+
+.sub-heading {
+    font-weight: 700;
+    color: #4a5568;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.main-heading {
+    font-weight: 700;
+    color: #1a202c;
+    line-height: 1.15;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.intro-text {
+    color: #4a5568;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+/* List Section Styling */
+.list-section {
+    padding-top: 20px;
+}
+
+.list-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 25px 0;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item .svg-container { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10px;
+    height: 10px; 
+    margin-right: 20px;
+    flex-shrink: 0; 
+    /* border: solid; */
+}
+
+.list-item .fa-star-of-life {
+    color: #ff007f; 
+}
+
+.list-item p {
+    color: #2d3748;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Video Section Styling */
+.innovation-video {
+    flex: 1; /* Takes available space */
+    min-width: 300px; /* Minimum width before wrapping */
+    position: relative; /* For absolute positioning of button */
+    display: flex; /* To center the video */
+    justify-content: center;
+    align-items: center;
+    background-color: none; /* Fallback for video background */
+    cursor: pointer; /* Indicate it's interactive */
+}
+
+.innovation-video video {
+    width: 80%;
+    height: auto;
+    display: block;
+    object-fit: cover; /* Ensures video covers the area */
+}
+
+/* Play/Pause Button Styling */
+.play-pause-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ff007f; /* Bright pink from the image */
+    border: none;
+    border-radius: 50%; /* Make it a circle */
+    width: 80px; /* Size of the circle */
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10; /* Ensure it's above the video */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Add shadow */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Transition opacity for smooth hide/show */
+
+    /* Initially hidden when video is playing */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* Allows clicks to pass through when hidden */
+}
+
+/* Show button on hover over the video container */
+.innovation-video:hover .play-pause-btn {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; /* Allow clicks when visible */
+}
+
+/* Force show button when video is paused (overrides hover and initial hidden state) */
+.play-pause-btn.force-show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; /* Allow clicks when visible */
+}
+
+.play-pause-btn:hover {
+    background-color: #cc0066; /* Slightly darker pink on hover */
+    transform: translate(-50%, -50%) scale(1.05); /* Slight scale up on hover */
+}
+
+.play-pause-btn .fas {
+    color: #fff; /* White icon */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .innovation {
+        flex-direction: column; /* Stack columns on smaller screens */
+    }
+
+    .innovation-cont,
+    .innovation-video,
+    .innovation .container 
+     {
+        min-width: unset; /* Remove min-width on small screens */
+        width: 100%; /* Take full width */
+    }
+    .innovation-video {
+        order: -1; /* Video appears at the top on mobile */
+        height: auto;
+        padding: 0; /* Remove padding for full width video on mobile */
+    }
+
+    .innovation-video video {
+        position: static;
+        top: auto;
+        left: auto;
+        height: auto;
+        max-width: 100%;
+        width: 100%; 
+        border-radius: 0; 
+        box-shadow: none; 
+    }
+}
+
+@media (max-width: 600px) {
+    .innovation-cont {
+        padding: 30px 20px;
+    }
+
+    .play-pause-btn {
+        width: 70px; /* Smaller button on mobile */
+        height: 70px;
+    }
+}

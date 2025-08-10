@@ -1,0 +1,132 @@
+.clientTrust {
+    background: #fff;
+    border-radius: 25px 25px 0px 0px ;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    background: rgb(230, 233, 237);
+    overflow: hidden;
+}
+
+.clientTrust-description {
+    /* border-top: solid rgb(183, 185, 188); */
+    width: 80%;
+    height: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+.clientTrust-heading {
+    width: 40%;
+}
+
+.clientTrust-sub-description {
+    width: 40%;
+}
+.client-image-scroller {
+    height: 40%;
+    width: 100%;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Container for scrolling images */
+.scroller-inner {
+    display: flex;
+    align-items: center;
+    gap: 2rem; /* Increased gap between images */
+    animation: scroll 40s linear infinite; /* Slower animation */
+    padding: 0 2rem;
+}
+
+.client-image-scroller:hover .scroller-inner {
+    animation-play-state: paused;
+}
+
+/* Individual image styling */
+.scroller-inner img {
+    border-radius: 25px;
+    height: 90%; /* Larger images */
+    width: 20%;
+    flex-shrink: 0;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    background: #fff;
+}
+
+/* Scale images slightly on hover */
+.scroller-inner img:hover {
+    transform: scale(1.05);
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Show only 5 images at a time */
+.client-image-scroller::before,
+.client-image-scroller::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 10%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.client-image-scroller::before {
+    left: 0;
+    background: linear-gradient(to right, rgba(230, 233, 237, 1), rgba(230, 233, 237, 0));
+}
+
+.client-image-scroller::after {
+    right: 0;
+    background: linear-gradient(to left, rgba(230, 233, 237, 1), rgba(230, 233, 237, 0));
+}
+
+@media (max-width: 800px) {
+        /* Client Trust section */
+    .clientTrust {
+        height: auto;
+        padding: 50px 0;
+    }
+
+    .clientTrust-description {
+        flex-direction: column;
+        width: 90%;
+        height: auto;
+        text-align: center;
+        border-top: none;
+        margin-bottom: 1rem;
+        padding: 15px;
+    }
+
+    .clientTrust-heading {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .clientTrust-sub-description {
+        width: 90%;
+    }
+
+    .client-image-scroller {
+        height: 30%;
+        margin-top: 20px;
+    }
+
+    .scroller-inner img {
+        height: 80px; /* Adjust image size for mobile */
+        width: auto; /* Maintain aspect ratio */
+    }
+}

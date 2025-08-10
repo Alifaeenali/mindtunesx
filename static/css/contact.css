@@ -1,0 +1,236 @@
+.Contact{
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    z-index: 4;
+    display: none; /* Hidden by default, will be shown via JS */
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.5);
+}
+
+.Contact-conatiner{
+    width: 50%;
+    height: 98%;
+    background: #fff;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+    align-items: center;
+    overflow-y: auto; /* Enable scrolling for smaller screens */
+}
+
+.contactCont{
+    width: 80%;
+}
+.closeBtnCont{
+    height: 5%;
+    display: flex;
+    align-items:self-end;
+}
+.closeBtnCont button{
+    width: 40px; /* Adjusted size */
+    height: 40px; /* Adjusted size */
+    border-radius: 50%;
+    font-size: x-large;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto; /* Push to the right */
+    color: #fff;
+    border: none;
+    background: rgb(240, 40, 184);
+    cursor: pointer;
+    margin-right: -10px; /* Adjust to align with container edge */
+    margin-top: -10px; /* Adjust to align with container edge */
+}
+
+.headers{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    text-align: center;
+    padding: 10px 0;
+}
+.mainHeading h1{
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+}
+.contact-description{
+    font-size: 0.9rem;
+    color: #666;
+    max-width: 80%;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Increased gap for better spacing */
+    width: 80%;
+    padding-bottom: 20px; /* Add padding at the bottom of the form */
+}
+.sec-cont{
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Gap between sub-containers */
+}
+.infoSection{
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    justify-content: space-between;
+    gap: 10px;
+}
+.form-sub-cont{
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap */
+    justify-content: space-between;
+    width: 100%; /* Take full width in parent */
+    gap: 10px; /* Gap between form-final-cont items */
+}
+
+.form-final-cont{
+    display: flex;
+    flex-direction: column;
+    width: 48%; /* Adjust width for two columns */
+    height: auto;
+}
+.form-final-cont label{
+    font-size: 0.9rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+.form-final-cont input, select{
+    height: 45px; /* Slightly increased height */
+    width: 100%; /* Take full width of its container */
+    background: rgb(240, 240, 240); /* Lighter background */
+    border-radius: 8px; /* Slightly less rounded */
+    border: 1px solid #ddd; /* Subtle border */
+    outline: none;
+    padding: 0 10px; /* Add padding inside input */
+    color: #333;
+    font-size: 1rem;
+}
+.form-final-cont select {
+    appearance: none; /* Remove default select arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23333333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
+    padding-right: 30px; /* Make space for the custom arrow */
+}
+
+
+.additionalDetails{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.additionalDetails label{
+    font-size: 0.9rem;
+    color: #333;
+}
+.additionalDetails  textarea{
+    background: rgb(240, 240, 240);
+    height: 100px; /* Increased height for textarea */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    resize: vertical; /* Allow vertical resizing */
+    font-size: 1rem;
+    color: #333;
+}
+
+.Submit{
+    height: 45px; /* Increased height for button */
+    width: 40%; /* Adjusted width */
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    background: rgb(240, 40, 184);
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: center; /* Center the button */
+    margin-top: 15px; /* Add some margin top */
+}
+.Submit:hover{
+    background: rgb(190, 30, 140);
+    transform: translateY(-2px);
+}
+.Submit:active{
+    transform: translateY(0);
+}
+
+@media (max-width: 1024px) {
+    .Contact-conatiner {
+        width: 70%; /* Wider on tablets */
+    }
+}
+
+@media (max-width: 768px) {
+    .Contact-conatiner {
+        width: 90%; /* Even wider on smaller tablets/large phones */
+        height: 90%; /* Adjust height */
+        padding: 15px;
+    }
+    .contactCont {
+        width: 95%; /* Adjust inner container width */
+    }
+    .closeBtnCont button {
+        margin-right: 0; /* Align closer to the edge */
+        margin-top: 0;
+    }
+    .mainHeading h1 {
+        font-size: 1.8rem;
+    }
+    .contact-description {
+        font-size: 0.85rem;
+        max-width: 95%;
+    }
+    .form-final-cont {
+        width: 100%; /* Stack inputs vertically on smaller screens */
+    }
+    .form-sub-cont {
+        flex-direction: column; /* Stack sub-containers vertically */
+        gap: 15px;
+    }
+    .Submit {
+        width: 60%; /* Make button wider on mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .Contact-conatiner {
+        width: 95%; /* Full width on very small phones */
+        height: 95%;
+        padding: 10px;
+    }
+    .closeBtnCont button {
+        width: 35px;
+        height: 35px;
+        font-size: x-large;
+    }
+    .mainHeading h1 {
+        font-size: 1.5rem;
+    }
+    .contact-description {
+        font-size: 0.8rem;
+    }
+    .form-final-cont input, select, .additionalDetails textarea {
+        height: 40px; /* Slightly smaller inputs on very small screens */
+        font-size: 0.9rem;
+    }
+    .Submit {
+        width: 80%; /* Even wider button */
+        height: 40px;
+        font-size: 1rem;
+    }
+}
