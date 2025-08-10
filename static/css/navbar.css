@@ -6,20 +6,39 @@
     --body-bg : rgb(26, 34, 36); 
     --sec-bg1 : #e6e9ed; 
 }
+p, 
+a, 
+button{
+    font-size: 1.7vw;
+}
 
+h1{
+    font-size: 3vw;
+}
+h2{
+    font-size: 2.5vw;
+}
+h3{
+    font-size: 2vw;
+}
+*{
+    font-family: "Libertinus Sans", sans-serif;
+}
+/* Navbar Styles */
 nav{
-width: 98%;
-display: flex;
-align-items: center;
-justify-content: space-between;
-height: 10vh;
-padding: 5px 10px;
-position: fixed;
-z-index: 100;
-top: 10px;
-border-radius: 10px;
-background: var(--nav-bg);
-transition: top 0.3s ease, opacity 0.3s ease;
+    width: 98%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 10vh;
+    padding: 5px 10px;
+    position: fixed;
+    z-index: 100;
+    top: 10px;
+    border-radius: 10px;
+    background: var(--nav-bg);
+    transition: top 0.3s ease, opacity 0.3s ease;
+    left: 1%;
 }
 
 #navbar.hidden {
@@ -40,20 +59,23 @@ transition: top 0.3s ease, opacity 0.3s ease;
     object-fit: fill;
     transition: 0s;
 }
+
 nav ul{
     display: flex;
     align-items: center;
     justify-content: space-around;
     width: 60%;
+    list-style: none;
     transition: .4s;
 }
+
 nav ul li a{
-    color: var(--text-normal);
     color: var(--text-normal);
     text-decoration: none;
     padding-bottom: 5px;
     position: relative;
 }
+
 nav ul li a::after {
     content: '';
     position: absolute;
@@ -62,13 +84,13 @@ nav ul li a::after {
     background-color: var(--pink-shade);
     left: 0;
     bottom: 0;
-    transform: scaleX(0); /* Initially scale to 0 width */
+    transform: scaleX(0);
     transform-origin: bottom left;
     transition: transform 0.3s ease-in-out;
 }
 
 nav ul li:hover a::after {
-    transform: scaleX(1); /* Scale to 100% width on hover */
+    transform: scaleX(1);
     transform-origin: bottom left;
 }
 
@@ -79,8 +101,278 @@ nav ul li:hover a{
 .logo .hidden{
     display: none;
 }
+/* Contact Section Styles */
+.Contact {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
 
-@media (max-width: 760px) {
+.Contact.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Contact-conatiner {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.closeBtnCont {
+    text-align: right;
+    margin-bottom: 1rem;
+}
+
+.closeBtn {
+    background: #ff007f;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.closeBtn:hover {
+    background: #e0006b;
+    transform: scale(1.1);
+}
+
+.mainHeading h1 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.contact-description {
+    text-align: center;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.form-sub-cont {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-final-cont {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-final-cont label {
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.form-final-cont input,
+.form-final-cont select,
+.additionalDetails textarea {
+    padding: 0.8rem;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-final-cont input:focus,
+.form-final-cont select:focus,
+.additionalDetails textarea:focus {
+    outline: none;
+    border-color: #ff007f;
+}
+
+.additionalDetails {
+    margin: 1.5rem 0;
+}
+
+.additionalDetails textarea {
+    width: 100%;
+    min-height: 100px;
+    resize: vertical;
+}
+
+.Submit {
+    width: 100%;
+    background: linear-gradient(135deg, #ff007f, #e0006b);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.Submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 0, 127, 0.3);
+}
+
+/* Footer Styles */
+footer {
+    background: #213337;
+    color: white;
+    padding: 3rem 0 1rem;
+    margin-top: 4rem;
+}
+
+.ftr-cont {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.footer-up {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+}
+
+.ftr-lft-logo img {
+    max-height: 60px;
+    margin-bottom: 1rem;
+}
+
+.lft-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.ftr-links {
+    color: var(--text-normal);
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.ftr-links:hover {
+    color: var(--pink-shade);
+}
+
+.ftr-rt {
+    display: flex;
+    gap: 3rem;
+}
+
+.ftr-rt-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.ftr-rt-links a {
+    color: var(--text-normal);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.ftr-rt-links a:hover {
+    color: var(--text-hover);
+}
+
+.bar {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 2rem 0;
+}
+
+.footer-down {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    color: var(--text-normal);
+}
+
+.term-sent a {
+    color: var(--text-normal);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.term-sent a:hover {
+    color: var(--pink-shade);
+}
+
+/* Back to Top Styles */
+.backtotop{
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    overflow: hidden;
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.backtotop.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.backtotop button{
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #ff007f;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.backtotop button:hover {
+    background: #e0006b;
+}
+
+.backtotop button i{
+    color: #ffffffb3;
+    transition: all 0.3s ease;
+}
+
+.backtotop button:hover i{
+    color: #fff;
+    font-weight: bolder;
+}
+
+/* Animations */
+@keyframes slideInDown {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
     nav{
         flex-direction: column;
         min-height: 10vh;
@@ -92,6 +384,7 @@ nav ul li:hover a{
         width: 100%;
         border-radius: 0px;
         padding: 5px;
+        left: 0;
     }
 
     .logo{
@@ -105,15 +398,16 @@ nav ul li:hover a{
     .logo img{
         width: 15%;
         object-fit: fill;
-
     }
 
     .logo .hidden{
         display: flex;
     }
+
     .logo .hidden .closeNav{
         display: none;
     }
+
     nav ul{
         width: 100%;
         flex-direction: column;
@@ -123,38 +417,38 @@ nav ul li:hover a{
         max-height: 0;
         opacity: 0;
         overflow: hidden;
-        transition: max-height 0.4s ease-in-out, 
-        opacity 0.4s ease-in-out;
-    }
-    nav ul li{
-        padding: 5px;
-        width: 100%;
-        border-bottom: solid var(--text-normal);
-    }
-
-    .logo .hidden{
-        display: flex;
-        gap: 10px; /* Adjust gap as needed */
-    }
-
-    .logo .hidden .closeNav{
-        display: none; /* Hide the close icon by default */
-    }
-    
-    .logo .hidden .openNav{
-        display: flex; 
-    }
-
-    nav ul{
-        /* existing styles... */
-        display: none; /* Hide the navigation menu by default */
+        transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out;
+        display: none;
     }
 
     nav ul.active{
-        display: flex; /* Show the menu when the 'active' class is applied */
-        max-height: 500px; /* A value large enough to fit all menu items */
+        display: flex;
+        max-height: 500px;
         opacity: 1;
     }
+
+    nav ul li{
+        padding: 5px;
+        width: 100%;
+        border-bottom: 1px solid var(--text-normal);
+    }
+.footer-up {
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .ftr-rt {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .footer-down {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .form-sub-cont {
+        flex-direction: column;
+    }
 }
-
-

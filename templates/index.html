@@ -6,20 +6,14 @@
     <title>Document</title>
     <link rel="stylesheet" href={{url_for('static', filename='css/base.css')}}>
 
-    <link rel="stylesheet" href={{url_for('static', filename='css/style.css')}}>
     <link rel="stylesheet" href={{url_for('static', filename='css/navbar.css')}}>
-    <link rel="stylesheet" href={{url_for('static', filename='css/contact.css')}}>
     <link rel="stylesheet" href={{url_for('static', filename='css/footer.css')}}>
-    <link rel="stylesheet" href={{url_for('static', filename='css/backtotop.css')}}>
     <link rel="stylesheet" href={{url_for('static', filename='css/hero.css')}}>
     <link rel="stylesheet" href={{url_for('static', filename='css/client.css')}}>
     <link rel="stylesheet" href={{url_for('static', filename='css/animation.css')}}>
     <link rel="stylesheet" href={{url_for('static', filename='css/innovation.css')}}>
-    <link rel="stylesheet" href={{url_for('static', filename='css/backtotop.css')}}>
-    <link rel="stylesheet" href={{url_for('static', filename='css/footer.css')}}>
     <link rel="stylesheet" href={{url_for('static', filename='css/improveExp.css')}}>
     <link rel="stylesheet" href={{url_for('static', filename='css/statistics.css')}}>
-    <link rel="stylesheet" href={{url_for('static', filename='css/contact.css')}}>
 
     <!-- google fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -60,7 +54,7 @@
                 <a href="{{url_for('services')}}">{{ nav.navAnchor3 }}</a>
             </li>
             <li>
-                <a href="#">{{ nav.navAnchor4 }}</a>
+                <a href="{{url_for('news')}}">{{ nav.navAnchor4 }}</a>
             </li>
             <li>
                 <a href="#" class='showContact'>{{ nav.navAnchor5 }}</a>
@@ -91,7 +85,7 @@
         </div>
     </section>
 
-    <section class="clientTrust">
+    <section class="clientTrust fadeIn">
 
         <div class="container">
             <div class="bar"></div>
@@ -239,7 +233,7 @@
                 <b><h1>{{ know.knowHead }}</h1></b>
             </div>
             <div class="improve-experience-subheading">
-                {{ know.knowDescp }}
+               <p>{{ know.knowDescp }}</p> 
             </div>
         </div>
     </section>
@@ -263,7 +257,7 @@
                         <img src="{{ statistic.ImgCard1 }}" alt="Statistic Card Logo 1">
                     {% endif %}
                     <div class="number">
-                        <h1>{{ statistic.headCard1 }}</h1>
+                        <h3>{{ statistic.headCard1 }}</h3>
                         <p>{{ statistic.DescCard1 }}</p>
                     </div>
                 </div>
@@ -272,7 +266,7 @@
                         <img src="{{ statistic.ImgCard2 }}" alt="Statistic Card Logo 2">
                     {% endif %}
                     <div class="number">
-                        <h1>{{ statistic.headCard2 }}</h1>
+                        <h3>{{ statistic.headCard2 }}</h3>
                         <p>{{ statistic.DescCard2 }}</p>
                     </div>
                 </div>
@@ -281,7 +275,7 @@
                         <img src="{{ statistic.ImgCard3 }}" alt="Statistic Card Logo 3">
                     {% endif %}
                     <div class="number">
-                        <h1>{{ statistic.headCard3 }}</h1>
+                        <h3>{{ statistic.headCard3 }}</h3>
                         <p>{{ statistic.DescCard3 }}</p>
                     </div>
                 </div>
@@ -289,77 +283,82 @@
         </div>
     </section>
 
-    <section class="Contact">
-        <div class="Contact-conatiner">
-            <div class="closeBtnCont contactCont">
-                <button class="closeBtn" id="closeBtn">&times;</button>
-            </div>
-            <div class="headers contactCont">
-                <div class="mainHeading">
-                    <b><h1>Get Started Today</h1></b>
-                </div>
-                <div class="contact-description">
-                    Book a consultant now to see how fortifund can help you reduce your risk
-                </div>
-            </div>
-            <form class="contactCont">
-                <div class="infoSection sec-cont">
-                    <div class="names form-sub-cont">
-                        <div class="form-final-cont">
-                            <label for="firstName">First Name: </label>
-                            <input type="text" id="firstName" name="first_name" required>
-                        </div>
-                        <div class="lname form-final-cont">
-                            <label for="lastName">Last Name: </label>
-                            <input type="text" id="lastName" name="last_name" required>
-                        </div>
-                    </div>
-                    <div class="job form-sub-cont">
-                        <div class="jobTitle form-final-cont">
-                            <label for="jobTitle">Job Title: </label>
-                            <input type="text" id="jobTitle" name="job_title" required>
-                        </div>
-                        <div class="CompanyName form-final-cont">
-                            <label for="companyName">Company Name</label>
-                            <input type="text" id="companyName" name="company_name" required>
-                        </div>
-                    </div>
-                    <div class="ContactInfo form-sub-cont">
-                        <div class="phNum form-final-cont">
-                            <label for="phoneNumber">Phone number: </label>
-                            <input type="text" id="phoneNumber" name="phone_number" required>
-                        </div>
-                        <div class="Email form-final-cont">
-                            <label for="email">Email: </label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                    </div>
-                    <div class="industryInfo form-sub-cont">
-                        <div class="industry form-final-cont">
-                            <label for="industry">Select Industry: </label>
-                            <select name="industry" id="industry">
-                                <option value="pleaseSelect">Please Select</option>
-                                <option value="Automotive">Automotive </option>
-                                <option value="Entertainment">Entertainment</option>
-                                <option value="Agriculture">Agriculture</option>
-                                <option value="Aviation">Aviation</option>
-                                <option value="Construction">Construction</option>
-                            </select>
-                        </div>
-                        <div class="EmployeeNum form-final-cont">
-                            <label for="numEmployees">Number of employees: </label>
-                            <input type="text" id="numEmployees" name="num_employees" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="additionalDetails">
-                    <label for="additionalDetails">Additional details: </label>
-                    <textarea name="additional_details" id="additionalDetails"></textarea>
-                </div>
-                <button class="Submit">Submit</button>
-            </form>
+<section class="Contact" id="contactModal">
+    <div class="Contact-conatiner">
+        <div class="closeBtnCont contactCont">
+            <button class="closeBtn" id="closeBtn">&times;</button>
         </div>
-    </section>
+        <div class="headers contactCont">
+            <div class="mainHeading">
+                <h1>Get Started Today</h1>
+            </div>
+            <div class="contact-description">
+                Ready to bring your innovative idea to life? Let's discuss how we can help you succeed.
+            </div>
+        </div>
+        <form class="contactCont" id="contactForm" method="POST" action="{{ url_for('contact') }}">
+            <div class="infoSection sec-cont">
+                <div class="names form-sub-cont">
+                    <div class="form-final-cont">
+                        <label for="firstName">First Name:</label>
+                        <input type="text" id="firstName" name="first_name" required>
+                    </div>
+                    <div class="lname form-final-cont">
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" id="lastName" name="last_name" required>
+                    </div>
+                </div>
+                <div class="job form-sub-cont">
+                    <div class="jobTitle form-final-cont">
+                        <label for="jobTitle">Job Title:</label>
+                        <input type="text" id="jobTitle" name="job_title" required>
+                    </div>
+                    <div class="CompanyName form-final-cont">
+                        <label for="companyName">Company Name:</label>
+                        <input type="text" id="companyName" name="company_name" required>
+                    </div>
+                </div>
+                <div class="ContactInfo form-sub-cont">
+                    <div class="phNum form-final-cont">
+                        <label for="phoneNumber">Phone Number:</label>
+                        <input type="text" id="phoneNumber" name="phone_number" required>
+                    </div>
+                    <div class="Email form-final-cont">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                </div>
+                <div class="industryInfo form-sub-cont">
+                    <div class="industry form-final-cont">
+                        <label for="industry">Select Industry:</label>
+                        <select name="industry" id="industry">
+                            <option value="pleaseSelect">Please Select</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Research">Research</option>
+                            <option value="Manufacturing">Manufacturing</option>
+                            <option value="IoT">IoT & Smart Devices</option>
+                            <option value="Wearables">Wearables</option>
+                            <option value="BrainTech">Brain Technology</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="EmployeeNum form-final-cont">
+                        <label for="numEmployees">Number of Employees:</label>
+                        <input type="text" id="numEmployees" name="num_employees" required>
+                    </div>
+                </div>
+            </div>
+            <div class="additionalDetails">
+                <label for="additionalDetails">Tell us about your project:</label>
+                <textarea name="additional_details" id="additionalDetails"
+                    placeholder="Describe your project, goals, timeline, and how we can help you bring your vision to life..."></textarea>
+            </div>
+            <button type="submit" class="Submit">Start Your Project</button>
+        </form>
+    </div>
+</section>
+
 
     <footer>
         <div class="ftr-cont">
@@ -429,10 +428,11 @@
             <i class="fa-solid fa-chevron-up"></i>
         </button>
     </div>
-</body>
 <script src="static/js/navbarSetting.js"></script>
 <script src="static/js/innovationVideoControls.js"></script>
 <script src="static/js/ExpVideoControls.js"></script>
 <script src="static/js/backtotop.js"></script>
-<script src="static/js/showContact.js"></script>
+<script src="static/js/showContact.js"></script>   
+
+</body>
 </html>

@@ -1,10 +1,44 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    background: rgb(26, 34, 36);
-    min-height: 100vh;
+
+:root{
+    --text-normal :  #ffffffb3; 
+    --text-hover: #fff; 
+    --pink-shade: #ff007f; 
+    --nav-bg: #213337; 
+    --body-bg : rgb(26, 34, 36); 
+    --sec-bg1 : #e6e9ed; 
 }
 
+* {
+    font-family: "Libertinus Sans", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+p, 
+a, 
+button, 
+li{
+    font-size: 1.7vw;
+}
+
+h1{
+    font-size: 3vw;
+}
+h2{
+    font-size: 2.5vw;
+}
+h3{
+    font-size: 2vw;
+}
+
+
+
+body {
+    line-height: 1.6;
+    background: var(--body-bg);
+    min-height: 100vh;
+}
+/* Main Content Styles */
 .container {
     max-width: 100%;
     margin: 0 auto;
@@ -14,7 +48,7 @@ body {
 /* Header */
 header {
     text-align: center;
-    padding: 4rem 0 2rem;
+    padding: 8rem 0 2rem;
     color: white;
     position: relative;
     overflow: hidden;
@@ -60,18 +94,19 @@ header {
     animation: fadeIn 1s ease-out 1.2s forwards;
     overflow: hidden;
 }
+
 .hero-image-placeholder img{
     height: 100%;
     width: 100%;
     object-fit: cover;
 }
+
 /* Section Styles */
 .section {
     margin: 4rem 0;
     opacity: 0;
     transform: translateY(30px);
     transition: all 0.8s ease;
-    background: var(--sec-bg1);
 }
 
 .section.visible {
@@ -88,13 +123,12 @@ header {
     overflow: hidden;
 }
 
-
 .section-title {
     font-size: 2.5rem;
     color: #2c3e50;
     margin-bottom: 2rem;
     text-align: center;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #000000, #000000);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -116,7 +150,6 @@ header {
     color: #2c3e50;
 }
 
-/* About Us Section with Image Grid */
 .about-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -138,6 +171,13 @@ header {
     color: #666;
     text-align: center;
     transition: all 0.3s ease;
+    overflow: hidden; /* Added to ensure image fits within bounds */
+}
+
+.image-placeholder img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .image-placeholder:hover {
@@ -145,7 +185,6 @@ header {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-/* Mission & Beliefs */
 .mission-beliefs {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -157,7 +196,7 @@ header {
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
     padding: 2.5rem;
     border-radius: 15px;
-    border-left: 5px solid #667eea;
+    border-left: 5px solid #ea66d4;
     transition: all 0.3s ease;
 }
 
@@ -184,14 +223,13 @@ header {
 }
 
 .beliefs-list li::before {
-    content: '✦';
+    content: '✓'; /* Changed from '笨ｦ' to a more standard checkmark */
     position: absolute;
     left: 0;
     color: #e029a9;
     font-size: 1.2rem;
 }
 
-/* Who We Work With */
 .clients-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -216,7 +254,7 @@ header {
 .client-icon {
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ea66dd, #a24b75);
     border-radius: 50%;
     margin: 0 auto 1rem;
     display: flex;
@@ -226,29 +264,17 @@ header {
     font-size: 1.5rem;
 }
 
-/* Founders Section */
-.founders-section {
-    padding: 3rem 0;
-}
-
-.founders-container {
-    display: flex;
-    flex-direction: column;
-    gap: 4rem;
-    margin-top: 2rem;
-}
-
 .founder-card {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     padding: 3rem;
-    /* box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1); */
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
     width: 100%;
     max-width: 900px;
-    margin: 0 auto;
+    margin: 0 auto 2rem;
+    border-radius: 15px; /* Added for consistency */
 }
 
 .founder-card::before {
@@ -267,7 +293,6 @@ header {
 }
 
 .founder-card:hover {
-    /* transform: translateY(-15px); */
     box-shadow: 0 35px 70px rgba(0, 0, 0, 0.15);
 }
 
@@ -286,7 +311,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 3px dashed rgba(102, 126, 234, 0.3);
+    border: 3px dashed rgba(234, 102, 232, 0.3);
     font-size: 1.1rem;
     color: #666;
     text-align: center;
@@ -296,15 +321,12 @@ header {
     overflow: hidden;
 }
 
-.founder-image-placeholder:hover {
-    transform: scale(1.02);
-    border-color: rgb(237, 16, 182);
-}
 .founder-image-placeholder img{
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
+
 .founder-info {
     flex: 1;
     padding-top: 1rem;
@@ -318,13 +340,13 @@ header {
 }
 
 .founder-role {
-    background: linear-gradient(135deg, #ea66d2, #764ba2);
+    background: linear-gradient(135deg, #ea66d2, #a24b74);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     font-weight: 700;
     font-size: 1.3rem;
-    margin-bottom: 3rem;
+    margin-bottom: 1.5rem;
     display: block;
 }
 
@@ -335,7 +357,6 @@ header {
     text-align: justify;
 }
 
-/* Achievement Section */
 .achievement-banner {
     background: linear-gradient(135deg, rgba(234, 102, 205, 0.9), rgba(118, 75, 162, 0.9));
     color: white;
@@ -345,22 +366,6 @@ header {
     margin: 3rem 0;
     position: relative;
     overflow: hidden;
-}
-
-.achievement-banner::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-    animation: rotate 20s linear infinite;
-}
-
-.achievement-content {
-    position: relative;
-    z-index: 2;
 }
 
 .achievement-title {
@@ -373,7 +378,6 @@ header {
     font-size: 1.2rem;
     opacity: 0.9;
 }
-
 
 /* Animations */
 @keyframes slideInDown {
@@ -389,29 +393,17 @@ header {
     }
 }
 
-@keyframes rotate {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* Responsive Design */
+/* Mobile Responsive */
 @media (max-width: 768px) {
+
     .main-title {
         font-size: 2.5rem;
     }
 
     .about-grid,
-    .mission-beliefs,
-    .founders-container {
+    .mission-beliefs {
+        grid-template-columns: 1fr;
         gap: 2rem;
-    }
-
-    .founders-container {
-        gap: 3rem;
     }
 
     .founder-header {
@@ -426,51 +418,7 @@ header {
         margin: 0 auto;
     }
 
-    .founder-info {
-        padding-top: 0;
-    }
-
-    .founder-info h3 {
-        font-size: 2rem;
-    }
-
     .section-card {
         padding: 2rem;
-    }
-
-    .cta-buttons {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .cta-button {
-        width: 100%;
-        max-width: 300px;
-    }
-
-    .clients-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 0 15px;
-    }
-
-    .section-card {
-        padding: 1.5rem;
-    }
-
-    .founder-card {
-        padding: 1.5rem;
-    }
-
-    .achievement-banner {
-        padding: 2rem;
-    }
-
-    .achievement-title {
-        font-size: 1.8rem;
     }
 }

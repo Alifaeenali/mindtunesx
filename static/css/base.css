@@ -4,6 +4,7 @@
     box-sizing: border-box;
     text-decoration: none;
     list-style: none;
+    /* color: black; */
     transition: .4s;
     font-family: "Libertinus Sans", sans-serif;
 }

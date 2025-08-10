@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'Edit Blog Post' if action == 'edit' else 'Create New Blog Post' }} - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .blog-form {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group-full {
+            grid-column: span 2;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-group textarea {
+            resize: vertical;
+        }
+        #blog_content {
+            min-height: 400px;
+        }
+        .file-preview {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .file-preview img {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 5px;
+            display: block;
+            margin: 5px 0;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .editor-toolbar {
+            background: #f8f9fa;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+        }
+        .editor-toolbar button {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            margin-right: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .editor-toolbar button:hover {
+            background: #e9ecef;
+        }
+        #blog_content {
+            border-radius: 0 0 4px 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <nav class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-cog"></i> Admin Panel</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="{{ url_for('admin', section='nav') }}">
+                        <i class="fas fa-navigation"></i> Navigation
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='hero') }}">
+                        <i class="fas fa-home"></i> Hero Section
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='clients') }}">
+                        <i class="fas fa-users"></i> Our Clients
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='about_us') }}">
+                        <i class="fas fa-info-circle"></i> About Us
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='innovations') }}">
+                        <i class="fas fa-lightbulb"></i> Innovations
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='know') }}">
+                        <i class="fas fa-brain"></i> Know Section
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='statistics') }}">
+                        <i class="fas fa-chart-bar"></i> Statistics
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='services') }}">
+                        <i class="fas fa-cogs"></i> Services
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin_blogs') }}" class="active">
+                        <i class="fas fa-newspaper"></i> Blog Management
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='footer') }}">
+                        <i class="fas fa-link"></i> Footer
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1>{{ 'Edit Blog Post' if action == 'edit' else 'Create New Blog Post' }}</h1>
+                <div class="admin-breadcrumb">
+                    <span>Admin</span> <i class="fas fa-chevron-right"></i> 
+                    <a href="{{ url_for('admin_blogs') }}">Blog Management</a> <i class="fas fa-chevron-right"></i>
+                    <span>{{ 'Edit Post' if action == 'edit' else 'Create Post' }}</span>
+                </div>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">
+                                <i class="fas {{ 'fa-check-circle' if category == 'success' else 'fa-exclamation-triangle' if category == 'warning' else 'fa-times-circle' }}"></i>
+                                <span>{{ message }}</span>
+                                <button class="flash-close" onclick="this.parentElement.remove()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" enctype="multipart/form-data" class="blog-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="blog_title">Blog Title *</label>
+                        <input type="text" id="blog_title" name="blog_title" 
+                               value="{{ blog_post.blog_title if blog_post else '' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="blog_author">Author *</label>
+                        <input type="text" id="blog_author" name="blog_author" 
+                               value="{{ blog_post.blog_author if blog_post else '' }}" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="blog_date">Publication Date *</label>
+                        <input type="date" id="blog_date" name="blog_date" 
+                               value="{{ blog_post.blog_date if blog_post else '' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="blog_status">Status *</label>
+                        <select id="blog_status" name="blog_status" required>
+                            <option value="published" {{ 'selected' if blog_post and blog_post.blog_status == 'published' else '' }}>Published</option>
+                            <option value="draft" {{ 'selected' if blog_post and blog_post.blog_status == 'draft' else '' }}>Draft</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="blog_subtitle">Subtitle</label>
+                    <input type="text" id="blog_subtitle" name="blog_subtitle" 
+                           value="{{ blog_post.blog_subtitle if blog_post else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="blog_image">Featured Image</label>
+                    <input type="file" id="blog_image" name="blog_image" accept="image/*">
+                    {% if blog_post and blog_post.blog_image %}
+                        <div class="file-preview">
+                            <p>Current Featured Image:</p>
+                            <img src="{{ blog_post.blog_image }}" alt="Current Featured Image">
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="blog_excerpt">Excerpt (Short Description) *</label>
+                    <textarea id="blog_excerpt" name="blog_excerpt" rows="3" 
+                              placeholder="Brief description that will appear in the blog listing page..." required>{{ blog_post.blog_excerpt if blog_post else '' }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="blog_content">Blog Content *</label>
+                    <div class="editor-toolbar">
+                        <button type="button" onclick="insertTag('h3')" title="Heading 3">
+                            <i class="fas fa-heading"></i> H3
+                        </button>
+                        <button type="button" onclick="insertTag('h4')" title="Heading 4">
+                            <i class="fas fa-heading"></i> H4
+                        </button>
+                        <button type="button" onclick="insertTag('strong')" title="Bold">
+                            <i class="fas fa-bold"></i>
+                        </button>
+                        <button type="button" onclick="insertTag('em')" title="Italic">
+                            <i class="fas fa-italic"></i>
+                        </button>
+                        <button type="button" onclick="insertTag('ul')" title="Unordered List">
+                            <i class="fas fa-list-ul"></i>
+                        </button>
+                        <button type="button" onclick="insertTag('ol')" title="Ordered List">
+                            <i class="fas fa-list-ol"></i>
+                        </button>
+                        <button type="button" onclick="insertTag('p')" title="Paragraph">
+                            <i class="fas fa-paragraph"></i>
+                        </button>
+                        <button type="button" onclick="insertLink()" title="Insert Link">
+                            <i class="fas fa-link"></i>
+                        </button>
+                    </div>
+                    <textarea id="blog_content" name="blog_content" 
+                              placeholder="Write your blog content here using HTML tags..." required>{{ blog_post.blog_content if blog_post else '' }}</textarea>
+                    <small style="color: #666; margin-top: 5px; display: block;">
+                        Use HTML tags for formatting. Common tags: &lt;p&gt;, &lt;h3&gt;, &lt;h4&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;a href=""&gt;
+                    </small>
+                </div>
+
+                <div class="form-actions">
+                    <a href="{{ url_for('admin_blogs') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Blog Management
+                    </a>
+                    <div>
+                        {% if action == 'edit' %}
+                            <button type="submit" name="blog_status" value="draft" class="btn btn-secondary">
+                                <i class="fas fa-save"></i> Save as Draft
+                            </button>
+                            <button type="submit" name="blog_status" value="published" class="btn btn-success">
+                                <i class="fas fa-check"></i> Update & Publish
+                            </button>
+                        {% else %}
+                            <button type="submit" name="blog_status" value="draft" class="btn btn-secondary">
+                                <i class="fas fa-save"></i> Save as Draft
+                            </button>
+                            <button type="submit" name="blog_status" value="published" class="btn btn-success">
+                                <i class="fas fa-check"></i> Create & Publish
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        // Simple HTML editor helper functions
+        function insertTag(tag) {
+            const textarea = document.getElementById('blog_content');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selectedText = textarea.value.substring(start, end);
+            
+            let insertion;
+            if (tag === 'ul') {
+                insertion = '<ul>\n<li>' + (selectedText || 'List item') + '</li>\n</ul>';
+            } else if (tag === 'ol') {
+                insertion = '<ol>\n<li>' + (selectedText || 'List item') + '</li>\n</ol>';
+            } else {
+                insertion = `<${tag}>` + (selectedText || `${tag.toUpperCase()} content`) + `</${tag}>`;
+            }
+            
+            textarea.value = textarea.value.substring(0, start) + insertion + textarea.value.substring(end);
+            textarea.focus();
+            textarea.setSelectionRange(start + insertion.length, start + insertion.length);
+        }
+
+        function insertLink() {
+            const textarea = document.getElementById('blog_content');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selectedText = textarea.value.substring(start, end);
+            const url = prompt('Enter URL:');
+            
+            if (url) {
+                const linkText = selectedText || 'Link text';
+                const insertion = `<a href="${url}">${linkText}</a>`;
+                textarea.value = textarea.value.substring(0, start) + insertion + textarea.value.substring(end);
+                textarea.focus();
+            }
+        }
+
+        // Auto-set today's date if creating new post
+        {% if action == 'create' %}
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('blog_date');
+            if (!dateInput.value) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.value = today;
+            }
+        });
+        {% endif %}
+
+        // Form submission handler to set status based on button clicked
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.blog-form');
+            const statusInput = document.getElementById('blog_status');
+            
+            form.addEventListener('submit', function(e) {
+                const submitter = e.submitter;
+                if (submitter && submitter.name === 'blog_status') {
+                    statusInput.value = submitter.value;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

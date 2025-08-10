@@ -180,16 +180,161 @@ INSERT INTO who_we_work_with (work_icon, work_title, work_description, work_orde
 ('🔬', 'Research Labs', 'Developing biomedical and IoT research tools', 3),
 ('🏢', 'Enterprise Companies', 'Custom hardware with mobile and cloud integration', 4);
 
--- Alter statements (if not already run)
-ALTER TABLE innovations ADD innovationMediaType VARCHAR(10) DEFAULT 'video';
-ALTER TABLE know ADD knowMediaType VARCHAR(10) DEFAULT 'video';
+ALTER TABLE aboutUs 
+ADD COLUMN about_secondary_desc TEXT,
+ADD COLUMN aboutHeroImage VARCHAR(200),
+ADD COLUMN achievement_title VARCHAR(200),
+ADD COLUMN achievement_subtitle TEXT,
+ADD COLUMN mission_text TEXT,
+ADD COLUMN belief1 VARCHAR(500),
+ADD COLUMN belief2 VARCHAR(500),
+ADD COLUMN belief3 VARCHAR(500),
+ADD COLUMN belief4 VARCHAR(500);
 
-INSERT INTO servicesTable (service_head, service_desc) VALUES
-('IoT & Embedded Systems Development', 'We design and build smart IoT solutions powered by efficient embedded systems, enabling seamless device connectivity, data collection, and automation for consumer and industrial applications. Our engineers specialize in microcontrollers, sensors, and wireless protocols for optimized performance.'),
-('EEG Wearables & Biosensor Solutions', 'MindTune pioneers EEG-powered wearables and biosensor integrations, enabling real-time tracking of mental and physical states. From earbuds to headsets, we turn neuroscience into user-friendly products for health, productivity, and research markets.'),
-('PCB Design & Hardware Prototyping', 'Our hardware team delivers PCB designs and rapid prototypes that meet high standards of performance, efficiency, and reliability. We handle every stage — from schematics to assembled boards.'),
-('Firmware & Machine Learning Integration', 'We create efficient firmware optimized for real-time data and integrate machine learning algorithms to deliver intelligent, adaptive devices. Our systems enhance performance while enabling edge-level AI features.'),
-('Mobile App & Cloud Development', 'We build scalable mobile apps and cloud platforms to connect devices, users, and data seamlessly. From Bluetooth integration to cloud dashboards, we bring IoT ecosystems to life.'),
-('Product Design & Mechanical CAD', 'Our mechanical engineers create functional and aesthetically refined designs using advanced CAD tools. We design housings, enclosures, and product structures that are production-ready.'),
-('Team & Culture', 'At MindTune Innovations, our culture thrives on collaboration, creativity, and technical excellence. Our multidisciplinary team of engineers, designers, and innovators works together to develop cutting-edge IoT, EEG, and smart tech solutions, fostering a culture where ideas grow into impactful products.');
+-- Update existing record with sample data (optional)
+UPDATE aboutUs SET 
+    about_secondary_desc = 'MindTune Innovations is a technology company based in Pakistan, focused on building intelligent products that connect hardware, software, and people. We bring together expertise in IoT, embedded systems, wearable tech, PCB design, and mobile app development — all within one team.',
+    aboutHeroImage = 'static/assets/images/hero.png',
+    achievement_title = 'Innovation & Excellence',
+    achievement_subtitle = 'Leading the way in wearable technology and IoT solutions with cutting-edge research and development.',
+    mission_text = 'Our mission is to bridge the gap between advanced technology and everyday life by creating intelligent, user-friendly products that enhance human capabilities and well-being.',
+    belief1 = 'Innovation drives progress',
+    belief2 = 'Quality over quantity',
+    belief3 = 'User-centered design',
+    belief4 = 'Collaborative excellence'
+WHERE about_id = 1;
 
+-- Table for contact form submissions
+create table if not exists contact_submissions(
+    id int auto_increment primary key,
+    name varchar(255) not null,
+    email varchar(255) not null,
+    subject varchar(255),
+    message text,
+    submission_date datetime default current_timestamp
+);
+
+-- Add this to your existing mindtunes_db.sql file
+
+-- Table for blog posts
+CREATE TABLE IF NOT EXISTS blog_posts (
+    blog_id INT AUTO_INCREMENT PRIMARY KEY,
+    blog_title VARCHAR(255) NOT NULL,
+    blog_subtitle VARCHAR(255),
+    blog_author VARCHAR(100) NOT NULL,
+    blog_date DATE NOT NULL,
+    blog_image VARCHAR(255),
+    blog_excerpt TEXT, -- Short description for the blog list page
+    blog_content LONGTEXT NOT NULL, -- Full blog content
+    blog_status ENUM('draft', 'published') DEFAULT 'published',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Insert sample blog data
+INSERT INTO blog_posts (blog_title, blog_subtitle, blog_author, blog_date, blog_image, blog_excerpt, blog_content, blog_status) VALUES
+(
+    'The Future of EEG Wearables in Healthcare',
+    'How Brain-Computer Interfaces are Revolutionizing Patient Care',
+    'Abdul Basit',
+    '2024-12-15',
+    'static/uploads/blog1.jpg',
+    'Explore how EEG wearables are transforming healthcare by providing real-time brain monitoring capabilities for better patient outcomes.',
+    '<p>The healthcare industry is experiencing a revolutionary transformation with the advent of EEG (Electroencephalography) wearables. These innovative devices are opening new frontiers in patient care, mental health monitoring, and neurological disorder management.</p>
+
+<h3>What are EEG Wearables?</h3>
+<p>EEG wearables are portable, non-invasive devices that can monitor brain activity in real-time. Unlike traditional EEG systems that require clinical settings and multiple electrodes, modern wearables integrate seamlessly into everyday life through headbands, earbuds, or caps.</p>
+
+<h3>Applications in Healthcare</h3>
+<ul>
+<li><strong>Seizure Detection:</strong> Real-time monitoring can alert patients and caregivers to impending seizures</li>
+<li><strong>Sleep Disorders:</strong> Continuous monitoring of sleep patterns and brain waves during rest</li>
+<li><strong>Mental Health:</strong> Tracking stress levels, anxiety, and depression markers</li>
+<li><strong>Cognitive Assessment:</strong> Monitoring cognitive decline in aging populations</li>
+</ul>
+
+<h3>The Technology Behind the Innovation</h3>
+<p>Modern EEG wearables utilize advanced signal processing, machine learning algorithms, and miniaturized electronics to deliver clinical-grade data. The integration of IoT connectivity allows for continuous data streaming to healthcare providers.</p>
+
+<p>At MindTune Innovations, we are at the forefront of this technology, developing next-generation EEG wearables that combine accuracy, comfort, and affordability.</p>',
+    'published'
+),
+(
+    'IoT in Smart Healthcare: Connecting Devices for Better Outcomes',
+    'Building the Connected Healthcare Ecosystem of Tomorrow',
+    'Ryan Ahmed',
+    '2024-12-10',
+    'static/uploads/blog2.jpg',
+    'Discover how Internet of Things (IoT) technology is creating interconnected healthcare systems that improve patient care and operational efficiency.',
+    '<p>The Internet of Things (IoT) is reshaping healthcare delivery by creating interconnected ecosystems of smart devices, sensors, and applications that work together to improve patient outcomes and streamline healthcare operations.</p>
+
+<h3>The Connected Healthcare Landscape</h3>
+<p>IoT in healthcare encompasses a vast network of connected devices including wearable sensors, smart medical equipment, environmental monitors, and mobile health applications. These devices collect, transmit, and analyze health data in real-time.</p>
+
+<h3>Key Benefits of IoT in Healthcare</h3>
+<ul>
+<li><strong>Remote Patient Monitoring:</strong> Continuous tracking of vital signs and health metrics</li>
+<li><strong>Preventive Care:</strong> Early detection of health issues before they become critical</li>
+<li><strong>Medication Management:</strong> Smart pill dispensers and adherence monitoring</li>
+<li><strong>Emergency Response:</strong> Automatic alerts for medical emergencies</li>
+</ul>
+
+<h3>Challenges and Solutions</h3>
+<p>While IoT offers tremendous benefits, it also presents challenges such as data security, device interoperability, and regulatory compliance. Our team at MindTune Innovations addresses these challenges through:</p>
+<ul>
+<li>End-to-end encryption for data security</li>
+<li>Standardized protocols for device communication</li>
+<li>Compliance with healthcare regulations like HIPAA</li>
+</ul>
+
+<p>The future of healthcare lies in seamlessly connected systems that put patients at the center of care delivery.</p>',
+    'published'
+),
+(
+    'PCB Design Best Practices for Wearable Devices',
+    'Engineering Challenges and Solutions in Miniaturized Electronics',
+    'MindTune Engineering Team',
+    '2024-12-05',
+    'static/uploads/blog3.jpg',
+    'Learn about the critical considerations and best practices for designing PCBs for wearable devices, from power management to signal integrity.',
+    '<p>Designing printed circuit boards (PCBs) for wearable devices presents unique challenges that require specialized knowledge and careful consideration of multiple factors including size constraints, power efficiency, and user comfort.</p>
+
+<h3>Key Design Considerations</h3>
+<p>When designing PCBs for wearables, engineers must balance numerous competing requirements:</p>
+
+<h4>Size and Form Factor</h4>
+<ul>
+<li>Miniaturization without compromising functionality</li>
+<li>Flexible and rigid-flex PCB options</li>
+<li>Component placement optimization</li>
+</ul>
+
+<h4>Power Management</h4>
+<ul>
+<li>Ultra-low power consumption design</li>
+<li>Battery life optimization</li>
+<li>Efficient power conversion circuits</li>
+<li>Sleep mode implementations</li>
+</ul>
+
+<h3>Signal Integrity in Compact Designs</h3>
+<p>Maintaining signal integrity becomes increasingly challenging as PCB real estate decreases. Key strategies include:</p>
+<ul>
+<li>Careful impedance control</li>
+<li>Minimizing electromagnetic interference (EMI)</li>
+<li>Proper grounding techniques</li>
+<li>Strategic component placement</li>
+</ul>
+
+<h3>Manufacturing Considerations</h3>
+<p>Wearable PCBs often require specialized manufacturing processes:</p>
+<ul>
+<li>Fine-pitch components and micro-vias</li>
+<li>Flexible materials for comfort</li>
+<li>Environmental sealing for durability</li>
+<li>Cost-effective high-volume production</li>
+</ul>
+
+<p>At MindTune Innovations, our PCB design expertise enables us to create compact, efficient, and reliable circuit boards that form the foundation of innovative wearable products.</p>',
+    'published'
+);

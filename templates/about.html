@@ -4,17 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - MindTune Innovations</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="stylesheet" href="{{url_for('static', filename='css/about.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/navbar.css')}}">
+
 </head>
 <body>
+    <nav id="navbar">
+        <div class="logo">
+            <img src="{{ nav.navLogo }}" alt="MindTune Logo">
+            <div class="hidden">
+                <svg class="openNav" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+                <svg class="closeNav" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+        </div>
+        <ul class="nav-items mobile-nav">
+            <li><a href="/">{{ nav.navAnchor1 }}</a></li>
+            <li><a href="/about" style="color: var(--pink-shade);">{{ nav.navAnchor2 }}</a></li>
+            <li><a href="/services">{{ nav.navAnchor3 }}</a></li>
+            <li><a href="{{url_for('news')}}">{{ nav.navAnchor4 }}</a></li>
+            <li><a href="#" class='showContact'>{{ nav.navAnchor5 }}</a></li>
+            <li><a href="#">{{ nav.navAnchor6 }}</a></li>
+        </ul>
+    </nav>
+
     <header>
         <div class="container">
             <div class="hero-content">
-                <h1 class="main-title">{{ aboutData.get('about_head', 'About MindTune Innovations') }}</h1>
-                <p class="subtitle">{{ aboutData.get('about_desc', 'Building intelligent products that connect hardware, software, and people') }}</p>
+                <h1 class="main-title">{{ aboutData.about_head }}</h1>
+                <p class="subtitle">{{ aboutData.about_desc }}</p>
                 <div class="hero-image-placeholder">
-                    <img src="{{ url_for('static', filename='assets/images/mindtuneteam.png') }}" alt="">
+                    <img src="{{ aboutData.aboutHeroImage }}" alt="MindTune Team">
                 </div>
             </div>
         </div>
@@ -23,20 +53,18 @@
     <main class="container">
         <section class="section">
             <div class="section-card">
-                <h2 class="section-title">{{ aboutData.get('about_title', 'About Us') }}</h2>
+                <h2 class="section-title">{{ aboutData.about_title }}</h2>
                 <div class="about-grid">
                     <div>
                         <p class="section-content">
-                            {{ aboutData.get('about_subtitle', 'MindTune Innovations is a technology company based in Pakistan...') }}
+                            {{ aboutData.about_subtitle }}
                         </p>
                         <p class="section-content">
-                           Our team includes engineers, developers, and designers who collaborate closely with startups, research labs, and product teams to transform early-stage ideas into working products. Whether you're building a brain-sensing device, an industrial IoT sensor, or a fully connected mobile system, we help you move from concept to prototype to launch with speed and precision.
+                            {{ aboutData.about_secondary_desc }}
                         </p>
                     </div>
                     <div class="image-placeholder">
-                        [Team Working Image]<br>
-                        Engineers & Developers<br>
-                        Collaborating
+                        <img src="static/assets/images/mindtunes.png" alt="Team Working">
                     </div>
                 </div>
             </div>
@@ -45,10 +73,9 @@
         <section class="section">
             <div class="achievement-banner">
                 <div class="achievement-content">
-                    <h2 class="achievement-title">🏆 First in Pakistan</h2>
+                    <h2 class="achievement-title">{{ aboutData.achievement_title }}</h2>
                     <p class="achievement-subtitle">
-                        We are proud to be the first company in Pakistan to assemble working EEG earbuds. 
-                        These devices combine advanced biomedical hardware with real-time Bluetooth connectivity and mobile integration.
+                        {{ aboutData.achievement_subtitle }}
                     </p>
                 </div>
             </div>
@@ -58,16 +85,16 @@
             <div class="section-card">
                 <div class="mission-beliefs">
                     <div class="mission-card">
-                        <h3 class="card-title">🎯 Our Mission</h3>
-                        <p>To make smart product development <span class="highlight">simple, fast, and accessible</span>, especially in emerging fields such as brain-tech, IoT, and health innovation.</p>
+                        <h3 class="card-title">💡 Our Mission</h3>
+                        <p>{{ aboutData.mission_text | safe }}</p>
                     </div>
                     <div class="beliefs-card">
-                        <h3 class="card-title">💡 What We Believe</h3>
+                        <h3 class="card-title">✨ What We Believe</h3>
                         <ul class="beliefs-list">
-                            <li><strong>Engineering is not just code and circuits.</strong> It is creativity and real-world problem-solving.</li>
-                            <li><strong>Speed matters.</strong> We build prototypes quickly without compromising quality.</li>
-                            <li><strong>Transparency is everything.</strong> We keep you informed and deliver what we promise.</li>
-                            <li><strong>Good technology</strong> should be useful, reliable, and built for real-world impact.</li>
+                            <li>{{ aboutData.belief1 }}</li>
+                            <li>{{ aboutData.belief2 }}</li>
+                            <li>{{ aboutData.belief3 }}</li>
+                            <li>{{ aboutData.belief4 }}</li>
                         </ul>
                     </div>
                 </div>
@@ -78,11 +105,11 @@
             <div class="section-card">
                 <h2 class="section-title">Who We Work With</h2>
                 <div class="clients-grid">
-                    {% for work_item in work_with %}
+                    {% for item in work_with %}
                     <div class="client-card">
-                        <div class="client-icon">{{ work_item.work_icon }}</div>
-                        <h4>{{ work_item.work_title }}</h4>
-                        <p>{{ work_item.work_description }}</p>
+                        <div class="client-icon">{{ item.work_icon | safe }}</div>
+                        <h4>{{ item.work_title }}</h4>
+                        <p>{{ item.work_description }}</p>
                     </div>
                     {% endfor %}
                 </div>
@@ -96,15 +123,16 @@
                     {% for founder in founders %}
                     <div class="founder-card">
                         <div class="founder-header">
-                            <div class="founder-image-placeholder">
-                                <img src="{{ founder.founder_image }}" alt="{{ founder.founder_name }}">
-                            </div>
+                            
                             <div class="founder-info">
                                 <h3>{{ founder.founder_name }}</h3>
                                 <div class="founder-role">{{ founder.founder_role }}</div>
                                 <p class="founder-description">
                                     {{ founder.founder_description }}
                                 </p>
+                            </div>
+                            <div class="founder-image-placeholder">
+                                <img src="{{ founder.founder_image }}" alt="{{ founder.founder_name }}">
                             </div>
                         </div>
                     </div>
@@ -114,7 +142,172 @@
         </section>
     </main>
 
+    <section class="Contact" id="contactModal">
+        <div class="Contact-conatiner">
+            <div class="closeBtnCont contactCont">
+                <button class="closeBtn" id="closeBtn">&times;</button>
+            </div>
+            <div class="headers contactCont">
+                <div class="mainHeading">
+                    <h1>Get Started Today</h1>
+                </div>
+                <div class="contact-description">
+                    Book a consultation now to see how MindTune can help bring your innovative ideas to life
+                </div>
+            </div>
+            <form class="contactCont" id="contactForm">
+                <div class="infoSection sec-cont">
+                    <div class="names form-sub-cont">
+                        <div class="form-final-cont">
+                            <label for="firstName">First Name:</label>
+                            <input type="text" id="firstName" name="first_name" required>
+                        </div>
+                        <div class="lname form-final-cont">
+                            <label for="lastName">Last Name:</label>
+                            <input type="text" id="lastName" name="last_name" required>
+                        </div>
+                    </div>
+                    <div class="job form-sub-cont">
+                        <div class="jobTitle form-final-cont">
+                            <label for="jobTitle">Job Title:</label>
+                            <input type="text" id="jobTitle" name="job_title" required>
+                        </div>
+                        <div class="CompanyName form-final-cont">
+                            <label for="companyName">Company Name:</label>
+                            <input type="text" id="companyName" name="company_name" required>
+                        </div>
+                    </div>
+                    <div class="ContactInfo form-sub-cont">
+                        <div class="phNum form-final-cont">
+                            <label for="phoneNumber">Phone Number:</label>
+                            <input type="text" id="phoneNumber" name="phone_number" required>
+                        </div>
+                        <div class="Email form-final-cont">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="industryInfo form-sub-cont">
+                        <div class="industry form-final-cont">
+                            <label for="industry">Select Industry:</label>
+                            <select name="industry" id="industry">
+                                <option value="pleaseSelect">Please Select</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Technology">Technology</option>
+                                <option value="Research">Research</option>
+                                <option value="Manufacturing">Manufacturing</option>
+                                <option value="Education">Education</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="EmployeeNum form-final-cont">
+                            <label for="numEmployees">Number of Employees:</label>
+                            <input type="text" id="numEmployees" name="num_employees" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="additionalDetails">
+                    <label for="additionalDetails">Tell us about your project:</label>
+                    <textarea name="additional_details" id="additionalDetails" placeholder="Describe your project, goals, and how we can help you..."></textarea>
+                </div>
+                <button type="submit" class="Submit">Submit</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="ftr-cont">
+            <div class="footer-up ftr-elem">
+                <div class="ftr-lft up-elem">
+                    <div class="ftr-lft-logo">
+                        <img src="{{ nav.navLogo }}" alt="MindTune Logo">
+                    </div>
+                    <div class="lft-links">
+                        <a href="#" class="ftr-links">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="ftr-links">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="#" class="ftr-links">
+                            <i class="fa-solid fa-at"></i>
+                        </a>
+                        <a href="#" class="ftr-links">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ftr-rt up-elem">
+                    <div class="ftr-rt-links link-cont-1">
+                        <a href="/">{{ nav.navAnchor1 }}</a>
+                        <a href="/about">{{ nav.navAnchor2 }}</a>
+                        <a href="/services">{{ nav.navAnchor3 }}</a>
+                    </div>
+                    <div class="ftr-rt-links link-cont-2">
+                        <a href="#">{{ nav.navAnchor4 }}</a>
+                        <a href="#" id='contactPage'>{{ nav.navAnchor5 }}</a>
+                        <a href="#">{{ nav.navAnchor6 }}</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="bar"></div>
+            </div>
+
+            <div class="footer-down ftr-elem">
+                <div class="term-policy term1">
+                    <p class="term-sent">
+                        &copy; 2025 MindTune Innovations. All rights reserved.
+                    </p>
+                </div>
+                <div class="term-policy term1">
+                    <p class="term-sent">
+                        <a href="#">{{ footer.ftr_link1 }}</a> | <a href="#">{{ footer.ftr_link2 }}</a> | <a href="#">{{ footer.ftr_link3 }}</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="backtotop" id="backToTop">
+        <button>
+            <i class="fa-solid fa-chevron-up"></i>
+        </button>
+    </div>
+
     <script>
+        // Navbar functionality
+        const navbar = document.getElementById('navbar');
+        const openNav = document.querySelector('.openNav');
+        const closeNav = document.querySelector('.closeNav');
+        const navItems = document.querySelector('.nav-items');
+
+        // Mobile menu toggle
+        openNav.addEventListener('click', () => {
+            navItems.classList.add('active');
+            openNav.style.display = 'none';
+            closeNav.style.display = 'flex';
+        });
+
+        closeNav.addEventListener('click', () => {
+            navItems.classList.remove('active');
+            closeNav.style.display = 'none';
+            openNav.style.display = 'flex';
+        });
+
+        // Hide/show navbar on scroll
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', () => {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                navbar.classList.add('hidden');
+            } else {
+                navbar.classList.remove('hidden');
+            }
+            lastScrollTop = scrollTop;
+        });
+
         // Intersection Observer for scroll animations
         const observerOptions = {
             threshold: 0.1,
@@ -134,17 +327,78 @@
             observer.observe(section);
         });
 
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+        // Contact Modal functionality
+        const contactModal = document.getElementById('contactModal');
+        const showContactBtns = document.querySelectorAll('.showContact, #contactPage');
+        const closeBtn = document.getElementById('closeBtn');
+
+        showContactBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+                contactModal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            contactModal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        });
+
+        contactModal.addEventListener('click', (e) => {
+            if (e.target === contactModal) {
+                contactModal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Contact form submission
+        const contactForm = document.getElementById('contactForm');
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // In a real application, you would send this data to a server
+            // using fetch or XMLHttpRequest. For now, we'll simulate success.
+            const messageBox = document.createElement('div');
+            messageBox.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #4CAF50;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                z-index: 2000;
+                text-align: center;
+                font-size: 1.1rem;
+            `;
+            messageBox.textContent = 'Thank you for your message! We will get back to you soon.';
+            document.body.appendChild(messageBox);
+
+            setTimeout(() => {
+                messageBox.remove();
+                contactModal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+                contactForm.reset();
+            }, 3000); // Message disappears after 3 seconds
+        });
+
+        // Back to top functionality
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
         });
 
@@ -159,38 +413,19 @@
             });
         });
 
-        // Add dynamic background elements
-        function createFloatingElements() {
-            const body = document.body;
-            for (let i = 0; i < 15; i++) {
-                const element = document.createElement('div');
-                element.style.cssText = `
-                    position: fixed;
-                    width: ${Math.random() * 6 + 4}px;
-                    height: ${Math.random() * 6 + 4}px;
-                    background: rgba(255, 255, 255, 0.1);
-                    border-radius: 50%;
-                    pointer-events: none;
-                    z-index: 1;
-                    left: ${Math.random() * 100}vw;
-                    top: ${Math.random() * 100}vh;
-                    animation: float ${Math.random() * 10 + 10}s ease-in-out infinite;
-                `;
-                body.appendChild(element);
-            }
-        }
-
-        // Add CSS for floating animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes float {
-                0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
-                50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
-            }
-        `;
-        document.head.appendChild(style);
-
-        createFloatingElements();
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
