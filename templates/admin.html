@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - MindTune Innovations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .file-preview {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .file-preview img, .file-preview video {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 5px;
+            display: block;
+            margin: 5px 0;
+        }
+        .media-type-selector {
+            margin-bottom: 15px;
+        }
+        .media-type-selector label {
+            margin-right: 15px;
+            font-weight: normal;
+        }
+        .client-logos-section, .dynamic-section {
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        .client-logo-item, .founder-item, .work-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+            gap: 15px;
+        }
+        .client-logo-preview, .founder-image-preview {
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+        .client-logo-preview img, .founder-image-preview img {
+            width: 80px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 3px;
+        }
+        .add-btn, .remove-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .remove-btn {
+            background: #dc3545;
+        }
+        .add-btn:hover {
+            background: #0056b3;
+        }
+        .remove-btn:hover {
+            background: #a71e2a;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <nav class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-cog"></i> Admin Panel</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="{{ url_for('admin', section='nav') }}" 
+                       class="{{ 'active' if current_section == 'nav' else '' }}">
+                        <i class="fas fa-navigation"></i> Navigation
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='hero') }}" 
+                       class="{{ 'active' if current_section == 'hero' else '' }}">
+                        <i class="fas fa-home"></i> Hero Section
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='clients') }}" 
+                       class="{{ 'active' if current_section == 'clients' else '' }}">
+                        <i class="fas fa-users"></i> Our Clients
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='about_us') }}" 
+                       class="{{ 'active' if current_section == 'about_us' else '' }}">
+                        <i class="fas fa-info-circle"></i> About Us
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='innovations') }}" 
+                       class="{{ 'active' if current_section == 'innovations' else '' }}">
+                        <i class="fas fa-lightbulb"></i> Innovations
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='know') }}" 
+                       class="{{ 'active' if current_section == 'know' else '' }}">
+                        <i class="fas fa-brain"></i> Know Section
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='statistics') }}" 
+                       class="{{ 'active' if current_section == 'statistics' else '' }}">
+                        <i class="fas fa-chart-bar"></i> Statistics
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='footer') }}" 
+                       class="{{ 'active' if current_section == 'footer' else '' }}">
+                        <i class="fas fa-link"></i> Footer
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1>{{ section_titles.get(current_section, 'Admin Panel') }}</h1>
+                <div class="admin-breadcrumb">
+                    <span>Admin</span> <i class="fas fa-chevron-right"></i> 
+                    <span>{{ section_titles.get(current_section, 'Dashboard') }}</span>
+                </div>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">
+                                <i class="fas {{ 'fa-check-circle' if category == 'success' else 'fa-exclamation-triangle' if category == 'warning' else 'fa-times-circle' }}"></i>
+                                <span>{{ message }}</span>
+                                <button class="flash-close" onclick="this.parentElement.remove()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="admin-content">
+                {% if current_section == 'nav' %}
+                    <form method="POST" enctype="multipart/form-data" class="admin-form">
+                        <div class="form-section">
+                            <h3><i class="fas fa-navigation"></i> Navigation Settings</h3>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="navLogo">Logo Upload</label>
+                                    <input type="file" id="navLogo" name="navLogo" accept="image/*">
+                                    {% if data.get('navLogo') %}
+                                        <div class="file-preview">
+                                            <p>Current Logo:</p>
+                                            <img src="{{ data.get('navLogo') }}" alt="Current Logo">
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="navAnchor1">Nav Link 1</label>
+                                    <input type="text" id="navAnchor1" name="navAnchor1" 
+                                           value="{{ data.get('navAnchor1', '') }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="navAnchor2">Nav Link 2</label>
+                                    <input type="text" id="navAnchor2" name="navAnchor2" 
+                                           value="{{ data.get('navAnchor2', '') }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="navAnchor3">Nav Link 3</label>
+                                    <input type="text" id="navAnchor3" name="navAnchor3" 
+                                           value="{{ data.get('navAnchor3', '') }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="navAnchor4">Nav Link 4</label>
+                                    <input type="text" id="navAnchor4" name="navAnchor4" 
+                                           value="{{ data.get('navAnchor4', '') }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="navAnchor5">Nav Link 5</label>
+                                    <input type="text" id="navAnchor5" name="navAnchor5" 
+                                           value="{{ data.get('navAnchor5', '') }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="navAnchor6">Nav Link 6</label>
+                                    <input type="text" id="navAnchor6" name="navAnchor6" 
+                                           value="{{ data.get('navAnchor6', '') }}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Update Navigation
+                        </button>
+                    </form>
+
+                {% elif current_section == 'hero' %}
+                    <form method="POST" enctype="multipart/form-data" class="admin-form">
+                        <div class="form-section">
+                            <h3><i class="fas fa-home"></i> Hero Section</h3>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="heroImg">Hero Image Upload</label>
+                                    <input type="file" id="heroImg" name="heroImg" accept="image/*">
+                                    {% if data.get('heroImg') %}
+                                        <div class="file-preview">
+                                            <p>Current Hero Image:</p>
+                                            <img src="{{ data.get('heroImg') }}" alt="Current Hero Image">
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="heroHead">Hero Heading</label>
+                                    <input type="text" id="heroHead" name="heroHead" 
+                                           value="{{ data.get('heroHead', '') }}" required>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="heroDesc">Hero Description</label>
+                                    <textarea id="heroDesc" name="heroDesc" rows="5" required>{{ data.get('heroDesc', '') }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Update Hero Section
+                        </button>
+                    </form>
+
+                {% elif current_section == 'clients' %}
+                    <form method="POST" enctype="multipart/form-data" class="admin-form">
+                        <div class="form-section">
+                            <h3><i class="fas fa-users"></i> Our Clients Section</h3>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="clientHead">Client Section Heading</label>
+                                    <input type="text" id="clientHead" name="clientHead" 
+                                           value="{{ data.get('clientHead', '') }}" required>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="clientDesc">Client Section Description</label>
+                                    <textarea id="clientDesc" name="clientDesc" rows="3" required>{{ data.get('clientDesc', '') }}</textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="client-logos-section">
+                                <h4>Client Logos</h4>
+                                <div id="clientLogosContainer">
+                                    {% for i in range(client_logos|length) %}
+                                        <div class="client-logo-item">
+                                            <div class="form-group" style="flex: 1;">
+                                                <label for="clientLogo{{ i + 1 }}">Client Logo {{ i + 1 }}</label>
+                                                <input type="file" id="clientLogo{{ i + 1 }}" name="clientLogo{{ i + 1 }}" accept="image/*">
+                                                <input type="hidden" name="existingLogoUrl" value="{{ client_logos[i] }}">
+                                            </div>
+                                            {% if client_logos[i] %}
+                                                <div class="client-logo-preview">
+                                                    <img src="{{ client_logos[i] }}" alt="Client Logo {{ i + 1 }}">
+                                                </div>
+                                            {% endif %}
+                                            <button type="button" class="remove-btn" onclick="removeClientLogo(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    {% endfor %}
+                                    {% if not client_logos %}
+                                        <div class="client-logo-item">
+                                            <div class="form-group" style="flex: 1;">
+                                                <label for="clientLogo1">Client Logo 1</label>
+                                                <input type="file" id="clientLogo1" name="clientLogo1" accept="image/*">
+                                            </div>
+                                            <button type="button" class="remove-btn" onclick="removeClientLogo(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <button type="button" class="add-btn" onclick="addClientLogo()">
+                                    <i class="fas fa-plus"></i> Add More Logo
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Update Clients Section
+                        </button>
+                    </form>
+                
+                {% elif current_section == 'about_us' %}
+                    <form method="POST" enctype="multipart/form-data" class="admin-form">
+                        <div class="form-section">
+                            <h3><i class="fas fa-info-circle"></i> About Us Page Content</h3>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="about_head">Main Title</label>
+                                    <input type="text" id="about_head" name="about_head" value="{{ data.get('about_head', '') }}" required>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="about_desc">Main Description</label>
+                                    <textarea id="about_desc" name="about_desc" rows="5" required>{{ data.get('about_desc', '') }}</textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="about_title">Section Title</label>
+                                    <input type="text" id="about_title" name="about_title" value="{{ data.get('about_title', '') }}" required>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="about_subtitle">Section Subtitle</label>
+                                    <textarea id="about_subtitle" name="about_subtitle" rows="3" required>{{ data.get('about_subtitle', '') }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="dynamic-section">
+                            <h3><i class="fas fa-user-tie"></i> Meet Our Founders</h3>
+                            <div id="foundersContainer">
+                                {% for founder in founders %}
+                                    <div class="founder-item">
+                                        <div class="form-group" style="flex: 1;">
+                                            <label for="founderName{{ loop.index }}">Name</label>
+                                            <input type="text" id="founderName{{ loop.index }}" name="founderName" value="{{ founder.get('founder_name', '') }}" required>
+                                            <label for="founderRole{{ loop.index }}">Role</label>
+                                            <input type="text" id="founderRole{{ loop.index }}" name="founderRole" value="{{ founder.get('founder_role', '') }}" required>
+                                            <label for="founderDescription{{ loop.index }}">Description</label>
+                                            <textarea id="founderDescription{{ loop.index }}" name="founderDescription" rows="3" required>{{ founder.get('founder_description', '') }}</textarea>
+                                            <label for="founderImage{{ loop.index }}">Image</label>
+                                            <input type="file" id="founderImage{{ loop.index }}" name="founderImage{{ loop.index }}" accept="image/*">
+                                            <input type="hidden" name="existingFounderImage" value="{{ founder.get('founder_image', '') }}">
+                                        </div>
+                                        {% if founder.get('founder_image') %}
+                                            <div class="founder-image-preview">
+                                                <img src="{{ founder.get('founder_image') }}" alt="{{ founder.get('founder_name', '') }}">
+                                            </div>
+                                        {% endif %}
+                                        <button type="button" class="remove-btn" onclick="removeFounder(this)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <button type="button" class="add-btn" onclick="addFounder()">
+                                <i class="fas fa-plus"></i> Add New Founder
+                            </button>
+                        </div>
+                        
+                        <div class="dynamic-section">
+                            <h3><i class="fas fa-briefcase"></i> Who We Work With</h3>
+                            <div id="workWithContainer">
+                                {% for work_item in work_with %}
+                                    <div class="work-item">
+                                        <div class="form-group" style="flex: 1;">
+                                            <label for="workIcon{{ loop.index }}">Icon (e.g., 🏥, ⚙️)</label>
+                                            <input type="text" id="workIcon{{ loop.index }}" name="workIcon" value="{{ work_item.get('work_icon', '') }}" required>
+                                            <label for="workTitle{{ loop.index }}">Title</label>
+                                            <input type="text" id="workTitle{{ loop.index }}" name="workTitle" value="{{ work_item.get('work_title', '') }}" required>
+                                            <label for="workDescription{{ loop.index }}">Description</label>
+                                            <textarea id="workDescription{{ loop.index }}" name="workDescription" rows="2" required>{{ work_item.get('work_description', '') }}</textarea>
+                                        </div>
+                                        <button type="button" class="remove-btn" onclick="removeWorkWith(this)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <button type="button" class="add-btn" onclick="addWorkWith()">
+                                <i class="fas fa-plus"></i> Add New Entry
+                            </button>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Update About Us Page
+                        </button>
+                    </form>
+
+                {% elif current_section == 'innovations' %}
+                    <form method="POST" enctype="multipart/form-data" class="admin-form">
+                        <div class="form-section">
+                            <h3><i class="fas fa-lightbulb"></i> Innovations Section</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="innovationSubHead">Sub Heading</label>
+                                    <input type="text" id="innovationSubHead" name="innovationSubHead" 
+                                           value="{{ data.get('innovationSubHead', '') }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="innovationHead">Main Heading</label>
+                                    <input type="text" id="innovationHead" name="innovationHead" 
+                                           value="{{ data.get('innovationHead', '') }}" required>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="innovationDescp">Description</label>
+                                    <textarea id="innovationDescp" name="innovationDescp" rows="3" required>{{ data.get('innovationDescp', '') }}</textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="innovationl1">Innovation Point 1</label>
+                                    <textarea id="innovationl1" name="innovationl1" rows="2" required>{{ data.get('innovationl1', '') }}</textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="innovationl2">Innovation Point 2</label>
+                                    <textarea id="innovationl2" name="innovationl2" rows="2" required>{{ data.get('innovationl2', '') }}</textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="innovationl3">Innovation Point 3</label>
+                                    <textarea id="innovationl3" name="innovationl3" rows="2" required>{{ data.get('innovationl3', '') }}</textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="innovationl4">Innovation Point 4</label>
+                                    <textarea id="innovationl4" name="innovationl4" rows="2" required>{{ data.get('innovationl4', '') }}</textarea>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label>Media Type</label>
+                                    <div class="media-type-selector">
+                                        <label>
+                                            <input type="radio" name="innovationMediaType" value="video" 
+                                                   {{ 'checked' if data.get('innovationMediaType', 'video') == 'video' else '' }}
+                                                   onchange="toggleMediaInput('innovations', this.value)"> Video
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="innovationMediaType" value="image" 
+                                                   {{ 'checked' if data.get('innovationMediaType') == 'image' else '' }}
+                                                   onchange="toggleMediaInput('innovations', this.value)"> Image
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group full-width" id="innovationsVideoGroup" 
+                                     style="display: {{ 'block' if data.get('innovationMediaType', 'video') == 'video' else 'none' }};">
+                                    <label for="innovationVideo">Video Upload</label>
+                                    <input type="file" id="innovationVideo" name="innovationVideo" accept="video/*">
+                                    {% if data.get('innovationVideo') and data.get('innovationMediaType', 'video') == 'video' %}
+                                        <div class="file-preview">
+                                            <p>Current Video:</p>
+                                            <video controls>
+                                                <source src="{{ data.get('innovationVideo') }}" type="video/mp4">
+                                            </video>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="form-group full-width" id="innovationsImageGroup" 
+                                     style="display: {{ 'block' if data.get('innovationMediaType') == 'image' else 'none' }};">
+                                    <label for="innovationImage">Image Upload</label>
+                                    <input type="file" id="innovationImage" name="innovationImage" accept="image/*">
+                                    {% if data.get('innovationImage') and data.get('innovationMediaType') == 'image' %}
+                                        <div class="file-preview">
+                                            <p>Current Image:</p>
+                                            <img src="{{ data.get('innovationImage') }}" alt="Current Innovation Image">
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Update Innovations Section
+                        </button>
+                    </form>
+
+                {% elif current_section == 'know' %}
+                    <form method="POST" enctype="multipart/form-data" class="admin-form">
+                        <div class="form-section">
+                            <h3><i class="fas fa-brain"></i> Know Section</h3>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="knowHead">Know Section Heading</label>
+                                    <input type="text" id="knowHead" name="knowHead" 
+                                           value="{{ data.get('knowHead', '') }}" required>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="knowDescp">Know Section Description</label>
+                                    <textarea id="knowDescp" name="knowDescp" rows="4" required>{{ data.get('knowDescp', '') }}</textarea>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label>Media Type</label>
+                                    <div class="media-type-selector">
+                                        <label>
+                                            <input type="radio" name="knowMediaType" value="video" 
+                                                   {{ 'checked' if data.get('knowMediaType', 'video') == 'video' else '' }}
+                                                   onchange="toggleMediaInput('know', this.value)"> Video
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="knowMediaType" value="image" 
+                                                   {{ 'checked' if data.get('knowMediaType') == 'image' else '' }}
+                                                   onchange="toggleMediaInput('know', this.value)"> Image
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group full-width" id="knowVideoGroup" 
+                                     style="display: {{ 'block' if data.get('knowMediaType', 'video') == 'video' else 'none' }};">
+                                    <label for="knowVideo">Video Upload</label>
+                                    <input type="file" id="knowVideo" name="knowVideo" accept="video/*">
+                                    {% if data.get('knowVideo') and data.get('knowMediaType', 'video') == 'video' %}
+                                        <div class="file-preview">
+                                            <p>Current Video:</p>
+                                            <video controls>
+                                                <source src="{{ data.get('knowVideo') }}" type="video/mp4">
+                                            </video>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="form-group full-width" id="knowImageGroup" 
+                                     style="display: {{ 'block' if data.get('knowMediaType') == 'image' else 'none' }};">
+                                    <label for="knowImage">Image Upload</label>
+                                    <input type="file" id="knowImage" name="knowImage" accept="image/*">
+                                    {% if data.get('knowImage') and data.get('knowMediaType') == 'image' %}
+                                        <div class="file-preview">
+                                            <p>Current Image:</p>
+                                            <img src="{{ data.get('knowImage') }}" alt="Current Know Image">
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Update Know Section
+                        </button>
+                    </form>
+
+                {% elif current_section == 'statistics' %}
+                    <form method="POST" enctype="multipart/form-data" class="admin-form">
+                        <div class="form-section">
+                            <h3><i class="fas fa-chart-bar"></i> Statistics Section</h3>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="statHead">Statistics Heading</label>
+                                    <input type="text" id="statHead" name="statHead" 
+                                           value="{{ data.get('statHead', '') }}" required>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="statDescp">Statistics Description</label>
+                                    <textarea id="statDescp" name="statDescp" rows="3" required>{{ data.get('statDescp', '') }}</textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="stats-cards">
+                                <div class="stat-card-form">
+                                    <h4>Card 1</h4>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="headCard1">Card 1 Heading</label>
+                                            <input type="text" id="headCard1" name="headCard1" 
+                                                   value="{{ data.get('headCard1', '') }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="DescCard1">Card 1 Description</label>
+                                            <input type="text" id="DescCard1" name="DescCard1" 
+                                                   value="{{ data.get('DescCard1', '') }}" required>
+                                        </div>
+                                        <div class="form-group full-width">
+                                            <label for="ImgCard1">Card 1 Image Upload</label>
+                                            <input type="file" id="ImgCard1" name="ImgCard1" accept="image/*">
+                                            {% if data.get('ImgCard1') %}
+                                                <div class="file-preview">
+                                                    <p>Current Image:</p>
+                                                    <img src="{{ data.get('ImgCard1') }}" alt="Card 1 Image">
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card-form">
+                                    <h4>Card 2</h4>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="headCard2">Card 2 Heading</label>
+                                            <input type="text" id="headCard2" name="headCard2" 
+                                                   value="{{ data.get('headCard2', '') }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="DescCard2">Card 2 Description</label>
+                                            <input type="text" id="DescCard2" name="DescCard2" 
+                                                   value="{{ data.get('DescCard2', '') }}" required>
+                                        </div>
+                                        <div class="form-group full-width">
+                                            <label for="ImgCard2">Card 2 Image Upload</label>
+                                            <input type="file" id="ImgCard2" name="ImgCard2" accept="image/*">
+                                            {% if data.get('ImgCard2') %}
+                                                <div class="file-preview">
+                                                    <p>Current Image:</p>
+                                                    <img src="{{ data.get('ImgCard2') }}" alt="Card 2 Image">
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-card-form">
+                                    <h4>Card 3</h4>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="headCard3">Card 3 Heading</label>
+                                            <input type="text" id="headCard3" name="headCard3" 
+                                                   value="{{ data.get('headCard3', '') }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="DescCard3">Card 3 Description</label>
+                                            <input type="text" id="DescCard3" name="DescCard3" 
+                                                   value="{{ data.get('DescCard3', '') }}" required>
+                                        </div>
+                                        <div class="form-group full-width">
+                                            <label for="ImgCard3">Card 3 Image Upload</label>
+                                            <input type="file" id="ImgCard3" name="ImgCard3" accept="image/*">
+                                            {% if data.get('ImgCard3') %}
+                                                <div class="file-preview">
+                                                    <p>Current Image:</p>
+                                                    <img src="{{ data.get('ImgCard3') }}" alt="Card 3 Image">
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Update Statistics Section
+                        </button>
+                    </form>
+
+                {% elif current_section == 'footer' %}
+                    <form method="POST" class="admin-form">
+                        <div class="form-section">
+                            <h3><i class="fas fa-link"></i> Footer Links</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="ftr_link1">Footer Link 1 (Facebook)</label>
+                                    <input type="text" id="ftr_link1" name="ftr_link1" 
+                                           value="{{ data.get('ftr_link1', '') }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ftr_link2">Footer Link 2 (Instagram)</label>
+                                    <input type="text" id="ftr_link2" name="ftr_link2" 
+                                           value="{{ data.get('ftr_link2', '') }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ftr_link3">Footer Link 3 (Twitter)</label>
+                                    <input type="text" id="ftr_link3" name="ftr_link3" 
+                                           value="{{ data.get('ftr_link3', '') }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ftr_link4">Footer Link 4 (LinkedIn)</label>
+                                    <input type="text" id="ftr_link4" name="ftr_link4" 
+                                           value="{{ data.get('ftr_link4', '') }}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Update Footer Links
+                        </button>
+                    </form>
+
+                {% else %}
+                    <div class="welcome-section">
+                        <div class="welcome-content">
+                            <i class="fas fa-tachometer-alt welcome-icon"></i>
+                            <h2>Welcome to Admin Panel</h2>
+                            <p>Select a section from the sidebar to start editing your website content.</p>
+                            <div class="quick-stats">
+                                <div class="quick-stat">
+                                    <i class="fas fa-edit"></i>
+                                    <span>7 Sections Available</span>
+                                </div>
+                                <div class="quick-stat">
+                                    <i class="fas fa-database"></i>
+                                    <span>Database Connected</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="admin-footer">
+                <a href="{{ url_for('index') }}" class="btn-secondary">
+                    <i class="fas fa-eye"></i> View Site
+                </a>
+                <a href="{{ url_for('admin_logout') }}" class="btn-danger">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Auto-hide flash messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.opacity = '0';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 300);
+                }, 5000);
+            });
+        });
+
+        // Form validation
+        document.querySelectorAll('.admin-form').forEach(function(form) {
+            form.addEventListener('submit', function(e) {
+                const button = form.querySelector('button[type="submit"]');
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                button.disabled = true;
+            });
+        });
+
+        // Toggle media input based on selection
+        function toggleMediaInput(section, type) {
+            const videoGroup = document.getElementById(section + 'VideoGroup');
+            const imageGroup = document.getElementById(section + 'ImageGroup');
+            
+            if (type === 'video') {
+                videoGroup.style.display = 'block';
+                imageGroup.style.display = 'none';
+            } else {
+                videoGroup.style.display = 'none';
+                imageGroup.style.display = 'block';
+            }
+        }
+
+        // Client logo management
+        let clientLogoCount = {{ client_logos|length if client_logos else 1 }};
+
+        function addClientLogo() {
+            clientLogoCount++;
+            const container = document.getElementById('clientLogosContainer');
+            const newLogoItem = document.createElement('div');
+            newLogoItem.className = 'client-logo-item';
+            newLogoItem.innerHTML = `
+                <div class="form-group" style="flex: 1;">
+                    <label for="clientLogo${clientLogoCount}">Client Logo ${clientLogoCount}</label>
+                    <input type="file" id="clientLogo${clientLogoCount}" name="clientLogo${clientLogoCount}" accept="image/*">
+                </div>
+                <button type="button" class="remove-btn" onclick="removeClientLogo(this)">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            container.appendChild(newLogoItem);
+        }
+
+        function removeClientLogo(button) {
+            const clientLogoItems = document.querySelectorAll('#clientLogosContainer .client-logo-item');
+            if (clientLogoItems.length > 1) {
+                button.closest('.client-logo-item').remove();
+            } else {
+                alert('At least one client logo must remain.');
+            }
+        }
+
+        // Founder management
+        let founderCount = {{ founders|length if founders else 0 }};
+
+        function addFounder() {
+            founderCount++;
+            const container = document.getElementById('foundersContainer');
+            const newFounderItem = document.createElement('div');
+            newFounderItem.className = 'founder-item';
+            newFounderItem.innerHTML = `
+                <div class="form-group" style="flex: 1;">
+                    <label for="founderName${founderCount}">Name</label>
+                    <input type="text" id="founderName${founderCount}" name="founderName" required>
+                    <label for="founderRole${founderCount}">Role</label>
+                    <input type="text" id="founderRole${founderCount}" name="founderRole" required>
+                    <label for="founderDescription${founderCount}">Description</label>
+                    <textarea id="founderDescription${founderCount}" name="founderDescription" rows="3" required></textarea>
+                    <label for="founderImage${founderCount}">Image</label>
+                    <input type="file" id="founderImage${founderCount}" name="founderImage${founderCount}" accept="image/*" required>
+                    <input type="hidden" name="existingFounderImage" value="">
+                </div>
+                <button type="button" class="remove-btn" onclick="removeFounder(this)">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            container.appendChild(newFounderItem);
+        }
+
+        function removeFounder(button) {
+            const founderItems = document.querySelectorAll('#foundersContainer .founder-item');
+            if (founderItems.length > 1) {
+                button.closest('.founder-item').remove();
+            } else {
+                alert('At least one founder must remain.');
+            }
+        }
+
+        // "Who We Work With" management
+        let workWithCount = {{ work_with|length if work_with else 0 }};
+
+        function addWorkWith() {
+            workWithCount++;
+            const container = document.getElementById('workWithContainer');
+            const newWorkItem = document.createElement('div');
+            newWorkItem.className = 'work-item';
+            newWorkItem.innerHTML = `
+                <div class="form-group" style="flex: 1;">
+                    <label for="workIcon${workWithCount}">Icon (e.g., 🏥, ⚙️)</label>
+                    <input type="text" id="workIcon${workWithCount}" name="workIcon" required>
+                    <label for="workTitle${workWithCount}">Title</label>
+                    <input type="text" id="workTitle${workWithCount}" name="workTitle" required>
+                    <label for="workDescription${workWithCount}">Description</label>
+                    <textarea id="workDescription${workWithCount}" name="workDescription" rows="2" required></textarea>
+                </div>
+                <button type="button" class="remove-btn" onclick="removeWorkWith(this)">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            container.appendChild(newWorkItem);
+        }
+
+        function removeWorkWith(button) {
+            const workItems = document.querySelectorAll('#workWithContainer .work-item');
+            if (workItems.length > 1) {
+                button.closest('.work-item').remove();
+            } else {
+                alert('At least one "Who We Work With" entry must remain.');
+            }
+        }
+    </script>
+</body>
+</html>

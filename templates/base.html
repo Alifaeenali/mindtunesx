@@ -3,35 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
-
+    <title>{% block title %}MindTune Innovations{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/backtotop.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/hero.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/client.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animation.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/innovation.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/improveExp.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/statistics.css') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libertinus+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    {% block head %}{% endblock %}
+
+    {# This block allows child templates to add specific head elements #}
+    {% block custom_head %}{% endblock %}
 </head>
 <body>
 
-    {% block navbar %}
     <nav id="navbar">
         <div class="logo">
             <img src="{{ nav.navLogo }}" alt="logo">
             <div class="hidden">
-                <svg class="openNav" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="openNav" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="3" y1="12" x2="21" y2="12"></line>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
                     <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg>
-                <svg class="closeNav" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="closeNav" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
@@ -40,18 +48,19 @@
         <ul class="nav-items mobile-nav">
             <li><a href="{{ url_for('index') }}">{{ nav.navAnchor1 }}</a></li>
             <li><a href="{{ url_for('about') }}">{{ nav.navAnchor2 }}</a></li>
-            <li><a href="{{ url_for('services') }}">{{nav.navAnchor3}}</a></li>
-            <li><a href="#">{{nav.navAnchor4}}</a></li>
-            <li><a href="#" class='showContact'>{{nav.navAnchor5}}</a></li>
+            <li><a href="{{ url_for('services') }}">{{ nav.navAnchor3 }}</a></li>
+            <li><a href="#">{{ nav.navAnchor4 }}</a></li>
+            <li><a href="#" class='showContact'>{{ nav.navAnchor5 }}</a></li>
             <li><a href="#">{{ nav.navAnchor6 }}</a></li>
         </ul>
     </nav>
-    {% endblock %}
 
-    {% block content %}
-    {% endblock %}
+    {# This is the main content area that child templates will fill #}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
 
-    {% block contact %}
+    {# Contact section - always present on every page #}
     <section class="Contact">
         <div class="Contact-conatiner">
             <div class="closeBtnCont contactCont">
@@ -123,9 +132,7 @@
             </form>
         </div>
     </section>
-    {% endblock %}
 
-    {% block footer %}
     <footer>
         <div class="ftr-cont">
             <div class="footer-up ftr-elem">
@@ -153,9 +160,11 @@
                     </div>
                 </div>
             </div>
+
             <div class="container">
                 <div class="bar"></div>
             </div>
+
             <div class="footer-down ftr-elem">
                 <div class="term-policy term1">
                     <p class="term-sent">
@@ -170,21 +179,17 @@
             </div>
         </div>
     </footer>
-    {% endblock %}
 
-    {% block backtotop %}
     <div class="backtotop">
         <button>
             <i class="fa-solid fa-chevron-up"></i>
         </button>
     </div>
-    {% endblock %}
-
-    <script src="static/js/navbarSetting.js"></script>
-    <script src="static/js/backtotop.js"></script>
-    <script src="static/js/showContact.js"></script>
-    
-    {% block scripts %}{% endblock %}
-
+    <script src="{{ url_for('static', filename='js/navbarSetting.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/innovationVideoControls.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ExpVideoControls.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/backtotop.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/showContact.js') }}"></script>
+    {% block custom_scripts %}{% endblock %}
 </body>
 </html>

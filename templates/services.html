@@ -3,179 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel='stylesheet' href="{{ url_for('static', filename='css/services.css') }}">
-    <title>{{ heroTitle }} - IoT & Embedded Systems Excellence</title>
-</head>
-<body>
-    <div class="gradient-bg">
-        <div class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1>{{ heroTitle }}</h1>
-                    <p>{{ heroSubtitle }}</p>
-                    <a href="#services" class="cta-button">{{ exploreButtonText }}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <section id="services" class="services-section">
-        <div class="floating-elements">
-            <div class="float-circle"></div>
-            <div class="float-circle"></div>
-            <div class="float-circle"></div>
-        </div>
-        
-        <div class="container">
-            <h2 class="section-title">{{ sectionTitle }}</h2>
-            <p class="section-subtitle">{{ sectionSubtitle }}</p>
-            
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">{{ serviceCard1Icon }}</div>
-                    <h3>{{ serviceCard1Title }}</h3>
-                    <p>{{ serviceCard1Desc }}</p>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">{{ serviceCard2Icon }}</div>
-                    <h3>{{ serviceCard2Title }}</h3>
-                    <p>{{ serviceCard2Desc }}</p>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">{{ serviceCard3Icon }}</div>
-                    <h3>{{ serviceCard3Title }}</h3>
-                    <p>{{ serviceCard3Desc }}</p>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">{{ serviceCard4Icon }}</div>
-                    <h3>{{ serviceCard4Title }}</h3>
-                    <p>{{ serviceCard4Desc }}</p>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">{{ serviceCard5Icon }}</div>
-                    <h3>{{ serviceCard5Title }}</h3>
-                    <p>{{ serviceCard5Desc }}</p>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">{{ serviceCard6Icon }}</div>
-                    <h3>{{ serviceCard6Title }}</h3>
-                    <p>{{ serviceCard6Desc }}</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="stats-section">
-        <div class="container">
-            <h2>{{ statsSectionTitle }}</h2>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <h4 data-target="{{ stat1Number }}">{{ stat1Number }}</h4>
-                    <p>{{ stat1Desc }}</p>
-                </div>
-                <div class="stat-item">
-                    <h4 data-target="{{ stat2Number }}">{{ stat2Number }}</h4>
-                    <p>{{ stat2Desc }}</p>
-                </div>
-                <div class="stat-item">
-                    <h4 data-target="{{ stat3Number }}">{{ stat3Number }}</h4>
-                    <p>{{ stat3Desc }}</p>
-                </div>
-                <div class="stat-item">
-                    <h4 data-target="{{ stat4Number }}">{{ stat4Number }}</h4>
-                    <p>{{ stat4Desc }}</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <script>
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Animate service cards on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all service cards
-        document.querySelectorAll('.service-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(30px)';
-            observer.observe(card);
-        });
-
-        // Counter animation for stats
-        function animateCounter(element, target, duration) {
-            let start = 0;
-            const increment = target / (duration / 16);
-            
-            function update() {
-                start += increment;
-                if (start < target) {
-                    element.textContent = Math.floor(start) + (element.textContent.includes('+') ? '+' : element.textContent.includes('★') ? '★' : element.textContent.includes('/') ? '/7' : '');
-                    requestAnimationFrame(update);
-                } else {
-                    element.textContent = element.getAttribute('data-target');
-                }
-            }
-            update();
+    <title>Services - MindTune Innovations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/services.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
         }
 
-        // Animate stats when they come into view
-        const statsObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const statNumbers = entry.target.querySelectorAll('.stat-item h4');
-                    statNumbers.forEach(stat => {
-                        const target = stat.getAttribute('data-target') || stat.textContent;
-                        // Handle non-numeric targets like "24/7" or "5★"
-                        let numericValue;
-                        if (target.includes('+')) {
-                            numericValue = parseInt(target.replace('+', ''));
-                        } else if (target.includes('★')) {
-                            numericValue = parseInt(target.replace('★', ''));
-                        } else if (target.includes('/')) {
-                            // For "24/7", animate to 24, or handle as a special case if needed
-                            numericValue = parseInt(target.split('/')[0]);
-                        } else {
-                            numericValue = parseInt(target);
-                        }
+        .service-card {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: left;
+        }
 
-                        if (!isNaN(numericValue)) { // Ensure it's a valid number for animation
-                            animateCounter(stat, numericValue, 2000);
-                        } else {
-                             stat.textContent = target; // If not numeric, just set the text directly
-                        }
-                    });
-                     // Disconnect observer after animation to avoid re-triggering
-                    statsObserver.disconnect();
-                }
-            });
-        }, { threshold: 0.5 });
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
 
-        statsObserver.observe(document.querySelector('.stats-section'));
-    </script>
+        .service-card h3 {
+            color: #007bff;
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+
+        .service-card p {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="services-container">
+        <header class="header-section">
+            <h1>Our Services</h1>
+        </header>
+
+        <section class="services-grid">
+            {% for service in servicesList %}
+            <div class="service-card">
+                <h3>{{ service.service_head }}</h3>
+                <p>{{ service.service_desc }}</p>
+            </div>
+            {% endfor %}
+        </section>
+    </div>
 </body>
 </html>

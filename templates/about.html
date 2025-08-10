@@ -4,33 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - MindTune Innovations</title>
-    <link rel="stylesheet" href="static/css/about.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header>
         <div class="container">
             <div class="hero-content">
-                <h1 class="main-title">About MindTune Innovations</h1>
-                <p class="subtitle">Building intelligent products that connect hardware, software, and people</p>
+                <h1 class="main-title">{{ aboutData.get('about_head', 'About MindTune Innovations') }}</h1>
+                <p class="subtitle">{{ aboutData.get('about_desc', 'Building intelligent products that connect hardware, software, and people') }}</p>
                 <div class="hero-image-placeholder">
-                    <img src="static/assets/images/mindtuneteam.png" alt="">
+                    <img src="{{ url_for('static', filename='assets/images/mindtuneteam.png') }}" alt="">
                 </div>
             </div>
         </div>
     </header>
 
     <main class="container">
-        <!-- About Us Section -->
         <section class="section">
             <div class="section-card">
-                <h2 class="section-title">About Us</h2>
+                <h2 class="section-title">{{ aboutData.get('about_title', 'About Us') }}</h2>
                 <div class="about-grid">
                     <div>
                         <p class="section-content">
-                            <span class="highlight">MindTune Innovations</span> is a technology company based in Pakistan, focused on building intelligent products that connect hardware, software, and people. We bring together expertise in <span class="highlight">IoT, embedded systems, wearable tech, PCB design, and mobile app development</span> — all within one team.
+                            {{ aboutData.get('about_subtitle', 'MindTune Innovations is a technology company based in Pakistan...') }}
                         </p>
                         <p class="section-content">
-                            Our team includes engineers, developers, and designers who collaborate closely with startups, research labs, and product teams to transform early-stage ideas into working products. Whether you're building a brain-sensing device, an industrial IoT sensor, or a fully connected mobile system, we help you move from concept to prototype to launch with speed and precision.
+                           Our team includes engineers, developers, and designers who collaborate closely with startups, research labs, and product teams to transform early-stage ideas into working products. Whether you're building a brain-sensing device, an industrial IoT sensor, or a fully connected mobile system, we help you move from concept to prototype to launch with speed and precision.
                         </p>
                     </div>
                     <div class="image-placeholder">
@@ -42,7 +42,6 @@
             </div>
         </section>
 
-        <!-- Achievement Banner -->
         <section class="section">
             <div class="achievement-banner">
                 <div class="achievement-content">
@@ -55,7 +54,6 @@
             </div>
         </section>
 
-        <!-- Mission & Beliefs -->
         <section class="section">
             <div class="section-card">
                 <div class="mission-beliefs">
@@ -76,71 +74,41 @@
             </div>
         </section>
 
-        <!-- Who We Work With -->
         <section class="section">
             <div class="section-card">
                 <h2 class="section-title">Who We Work With</h2>
                 <div class="clients-grid">
+                    {% for work_item in work_with %}
                     <div class="client-card">
-                        <div class="client-icon">🏥</div>
-                        <h4>Health-Tech Startups</h4>
-                        <p>Building wearable products and health monitoring solutions</p>
+                        <div class="client-icon">{{ work_item.work_icon }}</div>
+                        <h4>{{ work_item.work_title }}</h4>
+                        <p>{{ work_item.work_description }}</p>
                     </div>
-                    <div class="client-card">
-                        <div class="client-icon">⚙️</div>
-                        <h4>Engineering Teams</h4>
-                        <p>Embedded systems and PCB development support</p>
-                    </div>
-                    <div class="client-card">
-                        <div class="client-icon">🔬</div>
-                        <h4>Research Labs</h4>
-                        <p>Developing biomedical and IoT research tools</p>
-                    </div>
-                    <div class="client-card">
-                        <div class="client-icon">🏢</div>
-                        <h4>Enterprise Companies</h4>
-                        <p>Custom hardware with mobile and cloud integration</p>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </section>
 
-        <!-- Founders Section -->
         <section class="section">
             <div class="section-card">
                 <h2 class="section-title">Meet Our Founders</h2>
                 <div class="founders-grid">
-                    <!-- Abdul Basit -->
+                    {% for founder in founders %}
                     <div class="founder-card">
                         <div class="founder-header">
                             <div class="founder-image-placeholder">
-                                <img src="static/assets/images/abbasit.png" alt="">
+                                <img src="{{ founder.founder_image }}" alt="{{ founder.founder_name }}">
                             </div>
                             <div class="founder-info">
-                                <h3>Abdul Basit</h3>
-                                <div class="founder-role">CEO & DIRECTOR</div>
+                                <h3>{{ founder.founder_name }}</h3>
+                                <div class="founder-role">{{ founder.founder_role }}</div>
                                 <p class="founder-description">
-                                    Abdul Basit is an <span class="highlight">Electrical Engineer and technology innovator</span> with a proven track record in developing high-performance IoT and smart electronic solutions. At MindTune Innovations, he leads the company's product development strategy, combining technical depth in hardware and embedded systems with a clear vision for scalable, market-ready solutions. His focus is on building products that deliver measurable value and position MindTune as a leader in <span class="highlight">EEG and IoT-driven technologies</span>.
+                                    {{ founder.founder_description }}
                                 </p>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Ryan Ahmed -->
-                    <div class="founder-card">
-                        <div class="founder-header">
-                            <div class="founder-info">
-                                <h3>Ryan Ahmed</h3>
-                                <div class="founder-role">COO & DIRECTOR</div>
-                                <p class="founder-description">
-                                    Ryan Ahmed is the <span class="highlight">Co-Founder of Niura</span> and a strategic leader in wearable neuroscience technologies. With a background in launching and scaling consumer tech ventures, Ryan has positioned Niura as a pioneer in <span class="highlight">EEG-powered earbuds</span> designed for mental performance tracking. His expertise in bridging neuroscience with consumer technology allows Niura and MindTune to capture emerging market opportunities and drive significant growth potential in the wearable tech space.
-                                </p>
-                            </div>
-                            <div class="founder-image-placeholder">
-                                <img src="static/assets/images/rayanAhmed.png" alt="">
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </section>

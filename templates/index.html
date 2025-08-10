@@ -74,7 +74,6 @@
     <section class="hero">
         <div class="hero-container">
             <div class="hero-Img">
-                {# heroImg is directly available #}
                 {% if hero.heroImg %}
                     <img src="{{ hero.heroImg }}" alt="Hero Image">
                 {% endif %}
@@ -111,27 +110,14 @@
         </div>
         <div class="client-image-scroller">
             <div class="scroller-inner">
-               {# Direct access for clientImg1, clientImg2, etc. #} 
-                {% if client.client1 %}
-                <img src="{{ client.client1 }}" alt="Client Logo 1">
-                {% endif %}
-                {% if client.client2 %}
-                <img src="{{ client.client2 }}" alt="Client Logo 2">
-                {% endif %}
-                {% if client.client3 %}
-                <img src="{{ client.client3 }}" alt="Client Logo 3">
-                {% endif %}
-
-                <!-- {# Duplicate for continuous scroll effect if needed by CSS/JS #} -->
-                {% if client.client1 %}
-                <img src="{{ client.client1 }}" alt="Client Logo 1">
-                {% endif %}
-                {% if client.client2 %}
-                <img src="{{ client.client2 }}" alt="Client Logo 2">
-                {% endif %}
-                {% if client.client3 %}
-                <img src="{{ client.client3 }}" alt="Client Logo 3">
-                {% endif %}
+                {% for logo in client_logos %}
+                    <img src="{{ logo }}" alt="Client Logo {{ loop.index }}">
+                {% endfor %}
+                
+                <!-- Duplicate for continuous scroll effect -->
+                {% for logo in client_logos %}
+                    <img src="{{ logo }}" alt="Client Logo {{ loop.index }}">
+                {% endfor %}
             </div>
         </div>
         
@@ -188,13 +174,26 @@
         </div>
 
         <div class="innovation-video">
-            <video id="aNewCourseVideo" autoplay muted loop>
-                <source src="{{ innovation.innovationVideo }}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <button id="playPauseButton" class="play-pause-btn">
-                <i class="fas fa-pause"></i> 
-            </button>
+            {% if innovation.innovationMediaType == 'video' and innovation.innovationVideo %}
+                <video id="aNewCourseVideo" autoplay muted loop>
+                    <source src="{{ innovation.innovationVideo }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <button id="playPauseButton" class="play-pause-btn">
+                    <i class="fas fa-pause"></i> 
+                </button>
+            {% elif innovation.innovationMediaType == 'image' and innovation.innovationImage %}
+                <img src="{{ innovation.innovationImage }}" alt="Innovation Image" style="width: 100%; height: 100%; object-fit: cover;">
+            {% elif innovation.innovationVideo %}
+                <!-- Fallback to video if media type not set -->
+                <video id="aNewCourseVideo" autoplay muted loop>
+                    <source src="{{ innovation.innovationVideo }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <button id="playPauseButton" class="play-pause-btn">
+                    <i class="fas fa-pause"></i> 
+                </button>
+            {% endif %}
         </div>
         
         <div class="container">
@@ -203,9 +202,38 @@
     </section>
 
     <section class="improve-experience">
-        <video autoplay muted loop id="myVideo">
-            <source src="{{ know.knowVideo }}" type="video/mp4">
-        </video>
+        {% if know.knowMediaType == 'video' and know.knowVideo %}
+            <video autoplay muted loop id="myVideo">
+                <source src="{{ know.knowVideo }}" type="video/mp4">
+            </video>
+            <button id="playPauseBtn" class="play-pause-btn">
+                <svg class="play-icon" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                <svg class="pause-icon" viewBox="0 0 24 24" style="display: none;">
+                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                </svg>
+            </button>
+        {% elif know.knowMediaType == 'image' and know.knowImage %}
+            <div class="know-image-container" style="position: relative; width: 100%; height: 100vh; background: url('{{ know.knowImage }}') center/cover no-repeat;">
+                <!-- Optional overlay for text readability -->
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3);"></div>
+            </div>
+        {% elif know.knowVideo %}
+            <!-- Fallback to video if media type not set -->
+            <video autoplay muted loop id="myVideo">
+                <source src="{{ know.knowVideo }}" type="video/mp4">
+            </video>
+            <button id="playPauseBtn" class="play-pause-btn">
+                <svg class="play-icon" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                <svg class="pause-icon" viewBox="0 0 24 24" style="display: none;">
+                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                </svg>
+            </button>
+        {% endif %}
+        
         <div class="improve-experience-description">
             <div class="improve-experience-heading">
                 <b><h1>{{ know.knowHead }}</h1></b>
@@ -214,14 +242,6 @@
                 {{ know.knowDescp }}
             </div>
         </div>
-        <button id="playPauseBtn" class="play-pause-btn">
-            <svg class="play-icon" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z"/>
-            </svg>
-            <svg class="pause-icon" viewBox="0 0 24 24" style="display: none;">
-                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-            </svg>
-        </button>
     </section>
 
         <section class="statistics">
@@ -238,7 +258,6 @@
                 </div>
             </div>
             <div class="statistics-cards">
-                <!-- {# Direct access for stat card elements #} -->
                 <div class="card c1">
                     {% if statistic.ImgCard1 %}
                         <img src="{{ statistic.ImgCard1 }}" alt="Statistic Card Logo 1">
@@ -258,9 +277,9 @@
                     </div>
                 </div>
                 <div class="card c3">
-                    <!-- {% if statistic.ImgCard3 %} -->
+                    {% if statistic.ImgCard3 %}
                         <img src="{{ statistic.ImgCard3 }}" alt="Statistic Card Logo 3">
-                    <!-- {% endif %} -->
+                    {% endif %}
                     <div class="number">
                         <h1>{{ statistic.headCard3 }}</h1>
                         <p>{{ statistic.DescCard3 }}</p>
@@ -362,7 +381,7 @@
                             </a>
                        
                             <a href="{{ footer.ftr_link3 }}" class="ftr-links">
-                                <i class="fa-brands fa-twitter"></i>
+                                <i class="fa-solid fa-at"></i>
                             </a>
                         
                         
