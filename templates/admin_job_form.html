@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'Create Job' if action == 'create' else 'Edit Job' }} - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .form-header h1 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group.required label::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-cancel:hover {
+            background: #545b62;
+        }
+        
+        .btn-save {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-save:hover {
+            background: #0056b3;
+        }
+        
+        .btn-save-draft {
+            background: #ffc107;
+            color: #212529;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-save-draft:hover {
+            background: #e0a800;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <nav class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-cog"></i> Admin Panel</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="{{ url_for('admin', section='nav') }}" 
+                       class="{{ 'active' if current_section == 'nav' else '' }}">
+                        <i class="fas fa-navigation"></i> Navigation
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='hero') }}" 
+                       class="{{ 'active' if current_section == 'hero' else '' }}">
+                        <i class="fas fa-home"></i> Hero Section
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='clients') }}" 
+                       class="{{ 'active' if current_section == 'clients' else '' }}">
+                        <i class="fas fa-users"></i> Our Clients
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='about_us') }}" 
+                       class="{{ 'active' if current_section == 'about_us' else '' }}">
+                        <i class="fas fa-info-circle"></i> About Us
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='innovations') }}" 
+                       class="{{ 'active' if current_section == 'innovations' else '' }}">
+                        <i class="fas fa-lightbulb"></i> Innovations
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='know') }}" 
+                       class="{{ 'active' if current_section == 'know' else '' }}">
+                        <i class="fas fa-brain"></i> Know Section
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='statistics') }}" 
+                       class="{{ 'active' if current_section == 'statistics' else '' }}">
+                        <i class="fas fa-chart-bar"></i> Statistics
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='services') }}" 
+                       class="{{ 'active' if current_section == 'services' else '' }}">
+                        <i class="fas fa-cogs"></i> Services
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin_blogs') }}" 
+                    class="{{ 'active' if current_section == 'blogs' else '' }}">
+                        <i class="fas fa-newspaper"></i> Blog Management
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin_jobs') }}">
+                        <i class="fas fa-briefcase"></i> Job Management
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin_applications') }}">
+                        <i class="fas fa-file-alt"></i> Job Applications
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='footer') }}" 
+                       class="{{ 'active' if current_section == 'footer' else '' }}">
+                        <i class="fas fa-link"></i> Footer
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='contact_submissions') }}" 
+                       class="{{ 'active' if current_section == 'contact_submissions' else '' }}">
+                        <i class="fas fa-envelope"></i> Contact Submissions
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1>{{ 'Create New Job' if action == 'create' else 'Edit Job' }}</h1>
+                <div class="admin-breadcrumb">
+                    <span>Admin</span> <i class="fas fa-chevron-right"></i> 
+                    <a href="{{ url_for('admin_jobs') }}">Job Management</a> <i class="fas fa-chevron-right"></i>
+                    <span>{{ 'Create Job' if action == 'create' else 'Edit Job' }}</span>
+                </div>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">
+                                <i class="fas {{ 'fa-check-circle' if category == 'success' else 'fa-exclamation-triangle' if category == 'warning' else 'fa-times-circle' }}"></i>
+                                <span>{{ message }}</span>
+                                <button class="flash-close" onclick="this.parentElement.remove()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="admin-content">
+                <div class="form-container">
+                    <form method="POST" id="jobForm">
+                        <div class="form-grid">
+                            <div class="form-group required full-width">
+                                <label for="job_title">Job Title</label>
+                                <input type="text" id="job_title" name="job_title" 
+                                       value="{{ job.job_title if job else '' }}" required>
+                            </div>
+                            
+                            <div class="form-group required">
+                                <label for="job_type">Employment Type</label>
+                                <select id="job_type" name="job_type" required>
+                                    <option value="full-time" {{ 'selected' if job and job.job_type == 'full-time' else '' }}>Full-time</option>
+                                    <option value="part-time" {{ 'selected' if job and job.job_type == 'part-time' else '' }}>Part-time</option>
+                                    <option value="internship" {{ 'selected' if job and job.job_type == 'internship' else '' }}>Internship</option>
+                                    <option value="contract" {{ 'selected' if job and job.job_type == 'contract' else '' }}>Contract</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group required">
+                                <label for="department">Department</label>
+                                <input type="text" id="department" name="department" 
+                                       value="{{ job.department if job else '' }}" required>
+                            </div>
+                            
+                            <div class="form-group required">
+                                <label for="location">Location</label>
+                                <input type="text" id="location" name="location" 
+                                       value="{{ job.location if job else '' }}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="salary_range">Salary Range</label>
+                                <input type="text" id="salary_range" name="salary_range" 
+                                       value="{{ job.salary_range if job else '' }}" 
+                                       placeholder="e.g., PKR 150,000 - 250,000/month">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="application_deadline">Application Deadline</label>
+                                <input type="date" id="application_deadline" name="application_deadline" 
+                                       value="{{ job.application_deadline.strftime('%Y-%m-%d') if job and job.application_deadline else '' }}">
+                            </div>
+                            
+                            <div class="form-group required">
+                                <label for="job_status">Status</label>
+                                <select id="job_status" name="job_status" required>
+                                    <option value="active" {{ 'selected' if job and job.job_status == 'active' else '' }}>Active</option>
+                                    <option value="draft" {{ 'selected' if job and job.job_status == 'draft' else '' }}>Draft</option>
+                                    <option value="closed" {{ 'selected' if job and job.job_status == 'closed' else '' }}>Closed</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group required full-width">
+                                <label for="job_description">Job Description</label>
+                                <textarea id="job_description" name="job_description" required>{{ job.job_description if job else '' }}</textarea>
+                            </div>
+                            
+                            <div class="form-group required full-width">
+                                <label for="requirements">Requirements</label>
+                                <textarea id="requirements" name="requirements" required>{{ job.requirements if job else '' }}</textarea>
+                            </div>
+                            
+                            <div class="form-group required full-width">
+                                <label for="responsibilities">Key Responsibilities</label>
+                                <textarea id="responsibilities" name="responsibilities" required>{{ job.responsibilities if job else '' }}</textarea>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="benefits">Benefits & Perks</label>
+                                <textarea id="benefits" name="benefits">{{ job.benefits if job else '' }}</textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <a href="{{ url_for('admin_jobs') }}" class="btn-cancel">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </a>
+                            {% if action == 'create' %}
+                                <button type="button" class="btn-save-draft" onclick="submitForm('draft')">
+                                    <i class="fas fa-save"></i>
+                                    Save as Draft
+                                </button>
+                            {% endif %}
+                            <button type="button" class="btn-save" onclick="submitForm('active')">
+                                <i class="fas fa-check"></i>
+                                {{ 'Create Job' if action == 'create' else 'Update Job' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function submitForm(status) {
+            const statusField = document.getElementById('job_status');
+            const form = document.getElementById('jobForm');
+            
+            if (status) {
+                statusField.value = status;
+            }
+            
+            form.submit();
+        }
+    </script>
+</body>
+</html>

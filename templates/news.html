@@ -1,61 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News & Insights - MindTune Innovations</title>
-    <link rel="stylesheet" href={{url_for('static', filename='css/navbar.css')}}>
-    <link rel="stylesheet" href={{url_for('static', filename='css/news.css')}}>
+{% extends 'base.html' %}
 
-    <!-- google fonts -->
+{% block title %}News & Insights - MindTune Innovations{% endblock %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="{{url_for('static', filename='css/news.css')}}">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libertinus+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+{% endblock %}
 
-    <!-- font awesome link -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
-
-    <nav id="navbar">
-        <div class="logo">
-            <img src="{{ nav.navLogo }}" alt="logo">
-            <div class="hidden">
-                <svg class="openNav" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-                <svg class="closeNav" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </div>
-        </div>
-        <ul class="nav-items mobile-nav">
-            <li>
-                <a href="{{url_for('index')}}">{{ nav.navAnchor1 }}</a>
-            </li>
-            <li>
-                <a href="{{url_for('about')}}">{{ nav.navAnchor2 }}</a>
-            </li>
-            <li>
-                <a href="{{url_for('services')}}">{{ nav.navAnchor3 }}</a>
-            </li>
-            <li>
-                <a href="{{url_for('news')}}" class="active">{{ nav.navAnchor4 }}</a>
-            </li>
-            <li>
-                <a href="#" class='showContact'>{{ nav.navAnchor5 }}</a>
-            </li>
-            <li>
-                <a href="#">{{ nav.navAnchor6 }}</a>
-            </li>
-        </ul>
-    </nav>
-
+{% block content %}
     <section class="news-hero">
         <div class="news-hero-container">
             <div class="news-hero-content">
@@ -66,7 +21,7 @@
     </section>
 
     <section class="news-content">
-        <div class="container">
+        <div class="animContainer">
             <div class="bar"></div>
         </div>
 
@@ -106,146 +61,4 @@
             {% endif %}
         </div>
     </section>
-
-    <section class="Contact" id="contactModal">
-        <div class="Contact-conatiner">
-            <div class="closeBtnCont contactCont">
-                <button class="closeBtn" id="closeBtn">&times;</button>
-            </div>
-            <div class="headers contactCont">
-                <div class="mainHeading">
-                    <h1>Get Started Today</h1>
-                </div>
-                <div class="contact-description">
-                    Ready to bring your innovative idea to life? Let's discuss how we can help you succeed.
-                </div>
-            </div>
-            <form class="contactCont" id="contactForm">
-                <div class="infoSection sec-cont">
-                    <div class="names form-sub-cont">
-                        <div class="form-final-cont">
-                            <label for="firstName">First Name:</label>
-                            <input type="text" id="firstName" name="first_name" required>
-                        </div>
-                        <div class="lname form-final-cont">
-                            <label for="lastName">Last Name:</label>
-                            <input type="text" id="lastName" name="last_name" required>
-                        </div>
-                    </div>
-                    <div class="job form-sub-cont">
-                        <div class="jobTitle form-final-cont">
-                            <label for="jobTitle">Job Title:</label>
-                            <input type="text" id="jobTitle" name="job_title" required>
-                        </div>
-                        <div class="CompanyName form-final-cont">
-                            <label for="companyName">Company Name:</label>
-                            <input type="text" id="companyName" name="company_name" required>
-                        </div>
-                    </div>
-                    <div class="ContactInfo form-sub-cont">
-                        <div class="phNum form-final-cont">
-                            <label for="phoneNumber">Phone Number:</label>
-                            <input type="text" id="phoneNumber" name="phone_number" required>
-                        </div>
-                        <div class="Email form-final-cont">
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                    </div>
-                    <div class="industryInfo form-sub-cont">
-                        <div class="industry form-final-cont">
-                            <label for="industry">Select Industry:</label>
-                            <select name="industry" id="industry">
-                                <option value="pleaseSelect">Please Select</option>
-                                <option value="Healthcare">Healthcare</option>
-                                <option value="Technology">Technology</option>
-                                <option value="Research">Research</option>
-                                <option value="Manufacturing">Manufacturing</option>
-                                <option value="IoT">IoT & Smart Devices</option>
-                                <option value="Wearables">Wearables</option>
-                                <option value="BrainTech">Brain Technology</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div class="EmployeeNum form-final-cont">
-                            <label for="numEmployees">Number of Employees:</label>
-                            <input type="text" id="numEmployees" name="num_employees" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="additionalDetails">
-                    <label for="additionalDetails">Tell us about your project:</label>
-                    <textarea name="additional_details" id="additionalDetails" placeholder="Describe your project, goals, timeline, and how we can help you bring your vision to life..."></textarea>
-                </div>
-                <button type="submit" class="Submit">Start Your Project</button>
-            </form>
-        </div>
-    </section>
-
-    <footer>
-        <div class="ftr-cont">
-            <div class="footer-up ftr-elem">
-                <div class="ftr-lft up-elem">
-                    <div class="ftr-lft-logo">
-                        <img src="{{ nav.navLogo }}" alt="MindTune Innovations Logo">
-                    </div>
-                    <div class="lft-links">
-                        <a href="{{ footer.ftr_link1 }}" class="ftr-links">
-                            <i class="fa-brands fa-facebook-f"></i>
-                        </a>
-                        <a href="{{ footer.ftr_link2 }}" class="ftr-links">
-                            <i class="fa-brands fa-instagram"></i>
-                        </a>
-                        <a href="{{ footer.ftr_link3 }}" class="ftr-links">
-                            <i class="fa-solid fa-at"></i>
-                        </a>
-                        <a href="{{ footer.ftr_link4 }}" class="ftr-links">
-                            <i class="fa-brands fa-linkedin-in"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="ftr-rt up-elem">
-                    <div class="ftr-rt-links link-cont-1">
-                        <a href="{{ url_for('index') }}">{{ nav.navAnchor1 }}</a>
-                        <a href="{{ url_for('about') }}">{{ nav.navAnchor2 }}</a>
-                        <a href="{{ url_for('services') }}">{{ nav.navAnchor3 }}</a>
-                    </div>
-                    <div class="ftr-rt-links link-cont-2">
-                        <a href="{{ url_for('news') }}">{{ nav.navAnchor4 }}</a>
-                        <a id='contactPage'>{{ nav.navAnchor5 }}</a>
-                        <a href="#">{{ nav.navAnchor6 }}</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <div class="bar"></div>
-            </div>
-
-            <div class="footer-down ftr-elem">
-                <div class="term-policy term1">
-                    <p class="term-sent">
-                        &copy; 2025 MindTune Innovations. All rights reserved.
-                    </p>
-                </div>
-                <div class="term-policy term1">
-                    <p class="term-sent">
-                        <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Sitemap</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <div class="backtotop">
-        <button>
-            <i class="fa-solid fa-chevron-up"></i>
-        </button>
-    </div>
-
-    <script src="{{ url_for('static', filename='js/navbarSetting.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/backtotop.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/showContact.js') }}"></script>
-
-</body>
-</html>
+{% endblock %}

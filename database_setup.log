@@ -1,0 +1,23 @@
+2025-08-13 14:40:09,283 - INFO - Connected to MySQL server successfully
+2025-08-13 14:40:09,355 - INFO - Database 'mindtunes_db' created/selected successfully
+2025-08-13 14:40:09,360 - INFO - Database connection closed
+2025-08-13 14:40:09,393 - INFO - Connected to database 'mindtunes_db' successfully
+2025-08-13 14:40:09,462 - INFO - Table 'navTable' created successfully
+2025-08-13 14:40:09,472 - INFO - Table 'heroTable' created successfully
+2025-08-13 14:40:09,479 - INFO - Table 'Ourclients' created successfully
+2025-08-13 14:40:09,483 - INFO - Table 'client_logos' created successfully
+2025-08-13 14:40:09,490 - INFO - Table 'innovations' created successfully
+2025-08-13 14:40:09,497 - INFO - Table 'know' created successfully
+2025-08-13 14:40:09,499 - INFO - Table 'statistics' created successfully
+2025-08-13 14:40:09,505 - INFO - Table 'footer' created successfully
+2025-08-13 14:40:09,509 - INFO - Table 'aboutUs' created successfully
+2025-08-13 14:40:09,513 - INFO - Table 'founders' created successfully
+2025-08-13 14:40:09,518 - INFO - Table 'who_we_work_with' created successfully
+2025-08-13 14:40:09,528 - INFO - Table 'servicesTable' created successfully
+2025-08-13 14:40:09,529 - INFO - Table 'blog_posts' created successfully
+2025-08-13 14:40:09,537 - INFO - Table 'job_postings' created successfully
+2025-08-13 14:40:09,544 - INFO - Table 'job_applications' created successfully
+2025-08-13 14:40:09,560 - INFO - Table 'contact_submissions' created successfully
+2025-08-13 14:40:09,567 - INFO - Table 'team_members' created successfully
+2025-08-13 14:40:09,568 - ERROR - Error creating tables: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_submission_date ON contact_submissions (submission_date)' at line 1
+2025-08-13 14:40:09,570 - INFO - Database connection closed

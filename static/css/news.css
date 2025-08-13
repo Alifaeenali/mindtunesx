@@ -61,6 +61,8 @@
     padding: 100px 0;
     background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
     min-height: 60vh;
+    width: 100vw;
+    
 }
 
 .news-grid {
@@ -184,7 +186,7 @@
 }
 
 .blog-card:hover .blog-card-title {
-    color: #667eea;
+    color: #ea66c2;
 }
 
 .blog-card-subtitle {
@@ -194,6 +196,8 @@
     margin-bottom: 16px;
     line-height: 1.5;
     font-style: italic;
+    max-height: 20px;
+    overflow: hidden;
 }
 
 .blog-card-excerpt {
@@ -207,7 +211,7 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    color: #667eea;
+    color: #ea66d6;
     text-decoration: none;
     font-weight: 600;
     font-size: 1rem;
@@ -219,7 +223,7 @@
 }
 
 .blog-read-more:hover {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ea66c7, #a24b88);
     color: white;
     transform: translateX(5px);
 }

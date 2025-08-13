@@ -1,8 +1,8 @@
 body{
-    background: #fff;
+    background: #ffffff;
 }
 .blog-article {
-    max-width: 900px;
+    max-width: 90%;
     margin: 0 auto;
     padding: 60px 20px;
     background: white;
@@ -69,7 +69,7 @@ body{
 }
 
 .blog-meta i {
-    color: #667eea;
+    color: #ea66e1;
     font-size: 1.1rem;
 }
 

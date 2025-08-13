@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+
+{% block title %}Careers - MindTune Innovations{% endblock %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/careers.css') }}">
+{% endblock %}
+
+{% block content %}
+    <section class="careers-hero">
+        <div class="container">
+            <h1>Join Our Innovation Journey</h1>
+            <p>Be part of a team that's revolutionizing wearable technology and IoT solutions. Discover exciting opportunities to grow your career while making a meaningful impact.</p>
+        </div>
+    </section>
+
+    <main class="careers-main">
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">
+                                <i class="fas {{ 'fa-check-circle' if category == 'success' else 'fa-exclamation-triangle' if category == 'warning' else 'fa-times-circle' }}"></i>
+                                <span>{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="section-header">
+                <h2>Current Opportunities</h2>
+                <p>Explore our open positions and find the perfect role to advance your career in cutting-edge technology.</p>
+            </div>
+
+            {% if job_postings %}
+                <div class="jobs-grid">
+                    {% for job in job_postings %}
+                        <div class="job-card">
+                            <div class="job-header">
+                                <h3 class="job-title">{{ job.job_title }}</h3>
+                                <div class="job-meta">
+                                    <div class="job-meta-item">
+                                        <i class="fas fa-building"></i>
+                                        <span>{{ job.department }}</span>
+                                    </div>
+                                    <div class="job-meta-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>{{ job.location }}</span>
+                                    </div>
+                                    {% if job.salary_range %}
+                                        <div class="job-meta-item">
+                                            <i class="fas fa-money-bill-wave"></i>
+                                            <span>{{ job.salary_range }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <span class="job-type-badge job-type-{{ job.job_type.replace('-', '') }}">
+                                    {{ job.job_type.replace('-', ' ').title() }}
+                                </span>
+                            </div>
+                            
+                            <div class="job-description">
+                                {{ job.job_description }}
+                            </div>
+                            
+                            <div class="job-actions">
+                                <button class="btn-apply" onclick="openApplicationModal({{ job.job_id }}, '{{ job.job_title }}')">
+                                    Apply Now
+                                </button>
+                                <a href="{{ url_for('job_detail', job_id=job.job_id) }}" class="btn-details">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-jobs">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>No Current Openings</h3>
+                    <p>We don't have any open positions right now, but we're always looking for talented individuals. Check back soon or send us your resume!</p>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <div id="applicationModal" class="application-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Apply for Position</h3>
+                <p id="modalJobTitle">Job Title</p>
+                <button class="modal-close" onclick="closeApplicationModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="applicationForm" method="POST" enctype="multipart/form-data">
+                    <div class="form-group required">
+                        <label for="applicant_name">Full Name</label>
+                        <input type="text" id="applicant_name" name="applicant_name" required>
+                    </div>
+                    
+                    <div class="form-group required">
+                        <label for="applicant_email">Email Address</label>
+                        <input type="email" id="applicant_email" name="applicant_email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="applicant_phone">Phone Number</label>
+                        <input type="tel" id="applicant_phone" name="applicant_phone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="linkedin_profile">LinkedIn Profile</label>
+                        <input type="url" id="linkedin_profile" name="linkedin_profile" placeholder="https://linkedin.com/in/yourprofile">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="portfolio_website">Portfolio Website</label>
+                        <input type="url" id="portfolio_website" name="portfolio_website" placeholder="https://yourportfolio.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expected_salary">Expected Salary</label>
+                        <input type="text" id="expected_salary" name="expected_salary" placeholder="e.g., PKR 150,000/month">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="availability_date">Available From</label>
+                        <input type="date" id="availability_date" name="availability_date">
+                    </div>
+                    
+                    <div class="form-group required">
+                        <label for="cv_file">Upload CV (PDF only)</label>
+                        <div class="file-upload">
+                            <input type="file" id="cv_file" name="cv_file" accept=".pdf" required>
+                            <label for="cv_file" class="file-upload-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Click to upload your CV (PDF format)</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cover_letter">Cover Letter</label>
+                        <textarea id="cover_letter" name="cover_letter" placeholder="Tell us why you're interested in this position and what makes you a great fit..."></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel" onclick="closeApplicationModal()">Cancel</button>
+                        <button type="submit" class="btn-submit">Submit Application</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        // Application Modal Functions
+        function openApplicationModal(jobId, jobTitle) {
+            const modal = document.getElementById('applicationModal');
+            const modalJobTitle = document.getElementById('modalJobTitle');
+            const form = document.getElementById('applicationForm');
+            
+            modalJobTitle.textContent = jobTitle;
+            form.action = `/apply/${jobId}`;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeApplicationModal() {
+            const modal = document.getElementById('applicationModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // Reset form
+            document.getElementById('applicationForm').reset();
+        }
+        
+        // File upload handling
+        document.getElementById('cv_file').addEventListener('change', function(e) {
+            const label = this.nextElementSibling.querySelector('span');
+            if (this.files.length > 0) {
+                label.textContent = `Selected: ${this.files[0].name}`;
+            } else {
+                label.textContent = 'Click to upload your CV (PDF format)';
+            }
+        });
+        
+        // Close modal on outside click
+        document.getElementById('applicationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeApplicationModal();
+            }
+        });
+        
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeApplicationModal();
+            }
+        });
+        
+        // Form validation
+        document.getElementById('applicationForm').addEventListener('submit', function(e) {
+            const cvFile = document.getElementById('cv_file').files[0];
+            
+            if (!cvFile) {
+                e.preventDefault();
+                alert('Please upload your CV in PDF format.');
+                return;
+            }
+            
+            if (cvFile.type !== 'application/pdf') {
+                e.preventDefault();
+                alert('Please upload a PDF file for your CV.');
+                return;
+            }
+            
+            if (cvFile.size > 10 * 1024 * 1024) { // 10MB limit
+                e.preventDefault();
+                alert('CV file size must be less than 10MB.');
+                return;
+            }
+        });
+    </script>
+{% endblock %}

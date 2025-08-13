@@ -5,6 +5,7 @@
     position: relative;
     border-radius: 2px;
     overflow: hidden;
+    margin: 10px;
 }
 
 .bar {

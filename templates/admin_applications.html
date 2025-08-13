@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Applications - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .applications-header {
+            margin-bottom: 30px;
+        }
+        
+        .applications-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+        
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .stat-card p {
+            color: #666;
+            margin: 0;
+        }
+        
+        .applications-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .applications-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .applications-table th,
+        .applications-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .applications-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .applications-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-reviewed {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .status-shortlisted {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-interviewed {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+        
+        .status-hired {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .btn-view-cv,
+        .btn-update-status {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .btn-view-cv {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn-update-status {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .btn-view-cv:hover {
+            background: #138496;
+        }
+        
+        .btn-update-status:hover {
+            background: #e0a800;
+        }
+        
+        .status-update-form {
+            display: inline-flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        .status-update-form select {
+            padding: 4px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .status-update-form button {
+            padding: 4px 8px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .status-update-form button:hover {
+            background: #218838;
+        }
+        
+        .application-details {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .application-details.expanded {
+            white-space: normal;
+            max-width: none;
+        }
+        
+        .expand-btn {
+            color: #007bff;
+            cursor: pointer;
+            font-size: 0.8rem;
+            border: none;
+            background: none;
+            padding: 0;
+            margin-left: 5px;
+        }
+        
+        .expand-btn:hover {
+            color: #0056b3;
+        }
+        
+        .no-applications {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .no-applications i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .applications-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .applications-table {
+                overflow-x: auto;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <nav class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-cog"></i> Admin Panel</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="{{ url_for('admin', section='nav') }}" 
+                       class="{{ 'active' if current_section == 'nav' else '' }}">
+                        <i class="fas fa-navigation"></i> Navigation
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='hero') }}" 
+                       class="{{ 'active' if current_section == 'hero' else '' }}">
+                        <i class="fas fa-home"></i> Hero Section
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='clients') }}" 
+                       class="{{ 'active' if current_section == 'clients' else '' }}">
+                        <i class="fas fa-users"></i> Our Clients
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='about_us') }}" 
+                       class="{{ 'active' if current_section == 'about_us' else '' }}">
+                        <i class="fas fa-info-circle"></i> About Us
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='innovations') }}" 
+                       class="{{ 'active' if current_section == 'innovations' else '' }}">
+                        <i class="fas fa-lightbulb"></i> Innovations
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='know') }}" 
+                       class="{{ 'active' if current_section == 'know' else '' }}">
+                        <i class="fas fa-brain"></i> Know Section
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='statistics') }}" 
+                       class="{{ 'active' if current_section == 'statistics' else '' }}">
+                        <i class="fas fa-chart-bar"></i> Statistics
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='services') }}" 
+                       class="{{ 'active' if current_section == 'services' else '' }}">
+                        <i class="fas fa-cogs"></i> Services
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin_blogs') }}" 
+                    class="{{ 'active' if current_section == 'blogs' else '' }}">
+                        <i class="fas fa-newspaper"></i> Blog Management
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin_jobs') }}">
+                        <i class="fas fa-briefcase"></i> Job Management
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin_applications') }}">
+                        <i class="fas fa-file-alt"></i> Job Applications
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='footer') }}" 
+                       class="{{ 'active' if current_section == 'footer' else '' }}">
+                        <i class="fas fa-link"></i> Footer
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='contact_submissions') }}" 
+                       class="{{ 'active' if current_section == 'contact_submissions' else '' }}">
+                        <i class="fas fa-envelope"></i> Contact Submissions
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <div class="applications-header">
+                    <h1>Job Applications</h1>
+                    <div class="admin-breadcrumb">
+                        <span>Admin</span> <i class="fas fa-chevron-right"></i> 
+                        <span>Job Applications</span>
+                    </div>
+                </div>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">
+                                <i class="fas {{ 'fa-check-circle' if category == 'success' else 'fa-exclamation-triangle' if category == 'warning' else 'fa-times-circle' }}"></i>
+                                <span>{{ message }}</span>
+                                <button class="flash-close" onclick="this.parentElement.remove()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="admin-content">
+                <!-- Statistics -->
+                <div class="applications-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>{{ applications|length }}</h3>
+                        <p>Total Applications</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>{{ applications|selectattr("application_status", "equalto", "pending")|list|length }}</h3>
+                        <p>Pending Review</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-eye"></i>
+                        <h3>{{ applications|selectattr("application_status", "equalto", "reviewed")|list|length }}</h3>
+                        <p>Reviewed</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-star"></i>
+                        <h3>{{ applications|selectattr("application_status", "equalto", "shortlisted")|list|length }}</h3>
+                        <p>Shortlisted</p>
+                    </div>
+                </div>
+
+                <!-- Applications Table -->
+                <div class="applications-table">
+                    {% if applications %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Applicant</th>
+                                    <th>Job Title</th>
+                                    <th>Department</th>
+                                    <th>Applied Date</th>
+                                    <th>Status</th>
+                                    <th>CV</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for application in applications %}
+                                <tr>
+                                    <td>
+                                        <div><strong>{{ application.applicant_name }}</strong></div>
+                                        <div style="font-size: 0.9rem; color: #666;">
+                                            <a href="mailto:{{ application.applicant_email }}">{{ application.applicant_email }}</a>
+                                        </div>
+                                        {% if application.applicant_phone %}
+                                            <div style="font-size: 0.9rem; color: #666;">{{ application.applicant_phone }}</div>
+                                        {% endif %}
+                                    </td>
+                                    <td><strong>{{ application.job_title }}</strong></td>
+                                    <td>{{ application.department }}</td>
+                                    <td>{{ application.applied_date.strftime('%b %d, %Y') }}</td>
+                                    <td>
+                                        <span class="status-badge status-{{ application.application_status }}">
+                                            {{ application.application_status.replace('_', ' ').title() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ application.cv_path }}" target="_blank" class="btn-view-cv">
+                                            <i class="fas fa-file-pdf"></i> View CV
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-update-status" onclick="toggleStatusForm({{ application.application_id }})">
+                                                <i class="fas fa-edit"></i> Update
+                                            </button>
+                                            <div id="status-form-{{ application.application_id }}" class="status-update-form" style="display: none;">
+                                                <form method="POST" action="{{ url_for('update_application_status_route', application_id=application.application_id) }}">
+                                                    <select name="status" required>
+                                                        <option value="pending" {{ 'selected' if application.application_status == 'pending' else '' }}>Pending</option>
+                                                        <option value="reviewed" {{ 'selected' if application.application_status == 'reviewed' else '' }}>Reviewed</option>
+                                                        <option value="shortlisted" {{ 'selected' if application.application_status == 'shortlisted' else '' }}>Shortlisted</option>
+                                                        <option value="interviewed" {{ 'selected' if application.application_status == 'interviewed' else '' }}>Interviewed</option>
+                                                        <option value="hired" {{ 'selected' if application.application_status == 'hired' else '' }}>Hired</option>
+                                                        <option value="rejected" {{ 'selected' if application.application_status == 'rejected' else '' }}>Rejected</option>
+                                                    </select>
+                                                    <button type="submit">
+                                                        <i class="fas fa-save"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" style="padding: 0 15px 15px 15px; border-bottom: 2px solid #eee;">
+                                        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                                                {% if application.linkedin_profile %}
+                                                <div>
+                                                    <strong>LinkedIn:</strong><br>
+                                                    <a href="{{ application.linkedin_profile }}" target="_blank">{{ application.linkedin_profile }}</a>
+                                                </div>
+                                                {% endif %}
+                                                {% if application.portfolio_website %}
+                                                <div>
+                                                    <strong>Portfolio:</strong><br>
+                                                    <a href="{{ application.portfolio_website }}" target="_blank">{{ application.portfolio_website }}</a>
+                                                </div>
+                                                {% endif %}
+                                                {% if application.expected_salary %}
+                                                <div>
+                                                    <strong>Expected Salary:</strong><br>
+                                                    {{ application.expected_salary }}
+                                                </div>
+                                                {% endif %}
+                                                {% if application.availability_date %}
+                                                <div>
+                                                    <strong>Available From:</strong><br>
+                                                    {{ application.availability_date.strftime('%B %d, %Y') }}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            {% if application.cover_letter %}
+                                            <div>
+                                                <strong>Cover Letter:</strong><br>
+                                                <div class="application-details" id="cover-{{ application.application_id }}">
+                                                    {{ application.cover_letter }}
+                                                </div>
+                                                {% if application.cover_letter|length > 200 %}
+                                                <button class="expand-btn" onclick="toggleDetails('cover-{{ application.application_id }}')">Show more</button>
+                                                {% endif %}
+                                            </div>
+                                            {% endif %}
+                                            {% if application.notes %}
+                                            <div style="margin-top: 10px; padding: 10px; background: #fff; border-radius: 3px;">
+                                                <strong>Admin Notes:</strong><br>
+                                                {{ application.notes }}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="no-applications">
+                            <i class="fas fa-file-alt"></i>
+                            <h3>No Applications Yet</h3>
+                            <p>Job applications will appear here when candidates start applying for your positions.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleStatusForm(applicationId) {
+            const form = document.getElementById('status-form-' + applicationId);
+            const button = event.target.closest('button');
+            
+            if (form.style.display === 'none') {
+                form.style.display = 'inline-flex';
+                button.style.display = 'none';
+            } else {
+                form.style.display = 'none';
+                button.style.display = 'inline-flex';
+            }
+        }
+        
+        function toggleDetails(elementId) {
+            const element = document.getElementById(elementId);
+            const button = event.target;
+            
+            if (element.classList.contains('expanded')) {
+                element.classList.remove('expanded');
+                button.textContent = 'Show more';
+            } else {
+                element.classList.add('expanded');
+                button.textContent = 'Show less';
+            }
+        }
+    </script>
+</body>
+</html> 

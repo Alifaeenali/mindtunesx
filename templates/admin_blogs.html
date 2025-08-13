@@ -114,58 +114,86 @@
             <div class="sidebar-header">
                 <h2><i class="fas fa-cog"></i> Admin Panel</h2>
             </div>
+
             <ul class="sidebar-menu">
                 <li>
-                    <a href="{{ url_for('admin', section='nav') }}">
+                    <a href="{{ url_for('admin', section='nav') }}" 
+                       class="{{ 'active' if current_section == 'nav' else '' }}">
                         <i class="fas fa-navigation"></i> Navigation
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url_for('admin', section='hero') }}">
+                    <a href="{{ url_for('admin', section='hero') }}" 
+                       class="{{ 'active' if current_section == 'hero' else '' }}">
                         <i class="fas fa-home"></i> Hero Section
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url_for('admin', section='clients') }}">
+                    <a href="{{ url_for('admin', section='clients') }}" 
+                       class="{{ 'active' if current_section == 'clients' else '' }}">
                         <i class="fas fa-users"></i> Our Clients
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url_for('admin', section='about_us') }}">
+                    <a href="{{ url_for('admin', section='about_us') }}" 
+                       class="{{ 'active' if current_section == 'about_us' else '' }}">
                         <i class="fas fa-info-circle"></i> About Us
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url_for('admin', section='innovations') }}">
+                    <a href="{{ url_for('admin', section='innovations') }}" 
+                       class="{{ 'active' if current_section == 'innovations' else '' }}">
                         <i class="fas fa-lightbulb"></i> Innovations
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url_for('admin', section='know') }}">
+                    <a href="{{ url_for('admin', section='know') }}" 
+                       class="{{ 'active' if current_section == 'know' else '' }}">
                         <i class="fas fa-brain"></i> Know Section
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url_for('admin', section='statistics') }}">
+                    <a href="{{ url_for('admin', section='statistics') }}" 
+                       class="{{ 'active' if current_section == 'statistics' else '' }}">
                         <i class="fas fa-chart-bar"></i> Statistics
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url_for('admin', section='services') }}">
+                    <a href="{{ url_for('admin', section='services') }}" 
+                       class="{{ 'active' if current_section == 'services' else '' }}">
                         <i class="fas fa-cogs"></i> Services
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url_for('admin_blogs') }}" class="active">
+                    <a href="{{ url_for('admin_blogs') }}" 
+                    class="{{ 'active' if current_section == 'blogs' else '' }}">
                         <i class="fas fa-newspaper"></i> Blog Management
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url_for('admin', section='footer') }}">
+                    <a href="{{ url_for('admin_jobs') }}">
+                        <i class="fas fa-briefcase"></i> Job Management
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin_applications') }}">
+                        <i class="fas fa-file-alt"></i> Job Applications
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin', section='footer') }}" 
+                       class="{{ 'active' if current_section == 'footer' else '' }}">
                         <i class="fas fa-link"></i> Footer
                     </a>
                 </li>
+                <li>
+                    <a href="{{ url_for('admin', section='contact_submissions') }}" 
+                       class="{{ 'active' if current_section == 'contact_submissions' else '' }}">
+                        <i class="fas fa-envelope"></i> Contact Submissions
+                    </a>
+                </li>
             </ul>
+
         </nav>
 
         <main class="admin-main">

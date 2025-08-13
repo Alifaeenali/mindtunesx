@@ -1,45 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Services - MindTune Innovations</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <link rel="stylesheet" href="{{url_for('static', filename='css/services.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/navbar.css')}}">
-    
-</head>
-<body>
-    <!-- Navigation -->
-    <nav id="navbar">
-        <div class="logo">
-            <img src="{{ nav.navLogo }}" alt="MindTune Logo">
-            <div class="hidden">
-                <svg class="openNav" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-                <svg class="closeNav" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </div>
-        </div>
-        <ul class="nav-items mobile-nav">
-            <li><a href="/">{{ nav.navAnchor1 }}</a></li>
-            <li><a href="/about">{{ nav.navAnchor2 }}</a></li>
-            <li><a href="/services" style="color: var(--pink-shade);">{{ nav.navAnchor3 }}</a></li>
-            <li><a href="{{url_for('news')}}">{{ nav.navAnchor4 }}</a></li>
-            <li><a href="#" class='showContact'>{{ nav.navAnchor5 }}</a></li>
-            <li><a href="#">{{ nav.navAnchor6 }}</a></li>
-        </ul>
-    </nav>
+{% extends 'base.html' %}
 
-    <!-- Hero Section -->
+{% block title %}Services - MindTune Innovations{% endblock %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="{{url_for('static', filename='css/services.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/backtotopnav.css')}}">
+
+{% endblock %}
+
+{% block content %}
     <section class="hero">
         <div class="floating-elements">
             <div class="float-circle"></div>
@@ -50,12 +19,10 @@
             <div class="hero-content">
                 <h1>Our Services</h1>
                 <p>Comprehensive solutions for IoT, wearables, and next-generation technology products</p>
-                <a href="#services" class="cta-button showContact">Get Started Today</a>
             </div>
         </div>
     </section>
 
-    <!-- Services Section -->
     <section class="services-section" id="services">
         <div class="container">
             <h2 class="section-title">What We Do</h2>
@@ -65,8 +32,7 @@
                 {% for service in servicesList %}
                 <div class="service-card">
                     <div class="service-icon">
-                        <!-- You might want to add dynamic icons here if stored in DB, otherwise use a default -->
-                        <i class="fas fa-cogs"></i> 
+                        <i class="{{ service.service_icon or 'fas fa-cogs' }}"></i>
                     </div>
                     <h3>{{ service.service_head }}</h3>
                     <p>{{ service.service_desc }}</p>
@@ -75,251 +41,11 @@
             </div>
         </div>
     </section>
+{% endblock %}
 
-    <!-- Contact Section -->
-    <section class="Contact" id="contactModal">
-        <div class="Contact-conatiner">
-            <div class="closeBtnCont contactCont">
-                <button class="closeBtn" id="closeBtn">&times;</button>
-            </div>
-            <div class="headers contactCont">
-                <div class="mainHeading">
-                    <h1>Get Started Today</h1>
-                </div>
-                <div class="contact-description">
-                    Ready to bring your innovative idea to life? Let's discuss how we can help you succeed.
-                </div>
-            </div>
-            <form class="contactCont" id="contactForm">
-                <div class="infoSection sec-cont">
-                    <div class="names form-sub-cont">
-                        <div class="form-final-cont">
-                            <label for="firstName">First Name:</label>
-                            <input type="text" id="firstName" name="first_name" required>
-                        </div>
-                        <div class="lname form-final-cont">
-                            <label for="lastName">Last Name:</label>
-                            <input type="text" id="lastName" name="last_name" required>
-                        </div>
-                    </div>
-                    <div class="job form-sub-cont">
-                        <div class="jobTitle form-final-cont">
-                            <label for="jobTitle">Job Title:</label>
-                            <input type="text" id="jobTitle" name="job_title" required>
-                        </div>
-                        <div class="CompanyName form-final-cont">
-                            <label for="companyName">Company Name:</label>
-                            <input type="text" id="companyName" name="company_name" required>
-                        </div>
-                    </div>
-                    <div class="ContactInfo form-sub-cont">
-                        <div class="phNum form-final-cont">
-                            <label for="phoneNumber">Phone Number:</label>
-                            <input type="text" id="phoneNumber" name="phone_number" required>
-                        </div>
-                        <div class="Email form-final-cont">
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                    </div>
-                    <div class="industryInfo form-sub-cont">
-                        <div class="industry form-final-cont">
-                            <label for="industry">Select Industry:</label>
-                            <select name="industry" id="industry">
-                                <option value="pleaseSelect">Please Select</option>
-                                <option value="Healthcare">Healthcare</option>
-                                <option value="Technology">Technology</option>
-                                <option value="Research">Research</option>
-                                <option value="Manufacturing">Manufacturing</option>
-                                <option value="IoT">IoT & Smart Devices</option>
-                                <option value="Wearables">Wearables</option>
-                                <option value="BrainTech">Brain Technology</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div class="EmployeeNum form-final-cont">
-                            <label for="numEmployees">Number of Employees:</label>
-                            <input type="text" id="numEmployees" name="num_employees" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="additionalDetails">
-                    <label for="additionalDetails">Tell us about your project:</label>
-                    <textarea name="additional_details" id="additionalDetails" placeholder="Describe your project, goals, timeline, and how we can help you bring your vision to life..."></textarea>
-                </div>
-                <button type="submit" class="Submit">Start Your Project</button>
-            </form>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="ftr-cont">
-            <div class="footer-up ftr-elem">
-                <div class="ftr-lft up-elem">
-                    <div class="ftr-lft-logo">
-                        <img src="{{ nav.navLogo }}" alt="MindTune Logo">
-                    </div>
-                    <div class="lft-links">
-                        <a href="#" class="ftr-links">
-                            <i class="fa-brands fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="ftr-links">
-                            <i class="fa-brands fa-instagram"></i>
-                        </a>
-                        <a href="#" class="ftr-links">
-                            <i class="fa-solid fa-at"></i>
-                        </a>
-                        <a href="#" class="ftr-links">
-                            <i class="fa-brands fa-linkedin-in"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="ftr-rt up-elem">
-                    <div class="ftr-rt-links link-cont-1">
-                        <a href="/">{{ nav.navAnchor1 }}</a>
-                        <a href="/about">{{ nav.navAnchor2 }}</a>
-                        <a href="/services">{{ nav.navAnchor3 }}</a>
-                    </div>
-                    <div class="ftr-rt-links link-cont-2">
-                        <a href="#">{{ nav.navAnchor4 }}</a>
-                        <a href="#" id='contactPage'>{{ nav.navAnchor5 }}</a>
-                        <a href="#">{{ nav.navAnchor6 }}</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <div class="bar"></div>
-            </div>
-
-            <div class="footer-down ftr-elem">
-                <div class="term-policy term1">
-                    <p class="term-sent">
-                        &copy; 2025 MindTune Innovations. All rights reserved.
-                    </p>
-                </div>
-                <div class="term-policy term1">
-                    <p class="term-sent">
-                        <a href="#">{{ footer.ftr_link1 }}</a> | <a href="#">{{ footer.ftr_link2 }}</a> | <a href="#">{{ footer.ftr_link3 }}</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Back to Top Button -->
-    <div class="backtotop" id="backToTop">
-        <button>
-            <i class="fa-solid fa-chevron-up"></i>
-        </button>
-    </div>
-
+{% block scripts %}
+    {{ super() }}
     <script>
-        // Navbar functionality
-        const navbar = document.getElementById('navbar');
-        const openNav = document.querySelector('.openNav');
-        const closeNav = document.querySelector('.closeNav');
-        const navItems = document.querySelector('.nav-items');
-
-        // Mobile menu toggle
-        openNav.addEventListener('click', () => {
-            navItems.classList.add('active');
-            openNav.style.display = 'none';
-            closeNav.style.display = 'flex';
-        });
-
-        closeNav.addEventListener('click', () => {
-            navItems.classList.remove('active');
-            closeNav.style.display = 'none';
-            openNav.style.display = 'flex';
-        });
-
-        // Hide/show navbar on scroll
-        let lastScrollTop = 0;
-        window.addEventListener('scroll', () => {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop > lastScrollTop && scrollTop > 100) {
-                navbar.classList.add('hidden');
-            } else {
-                navbar.classList.remove('hidden');
-            }
-            lastScrollTop = scrollTop;
-        });
-
-        // Contact Modal functionality
-        const contactModal = document.getElementById('contactModal');
-        const showContactBtns = document.querySelectorAll('.showContact, #contactPage');
-        const closeBtn = document.getElementById('closeBtn');
-
-        showContactBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                contactModal.classList.add('show');
-                document.body.style.overflow = 'hidden';
-            });
-        });
-
-        closeBtn.addEventListener('click', () => {
-            contactModal.classList.remove('show');
-            document.body.style.overflow = 'auto';
-        });
-
-        contactModal.addEventListener('click', (e) => {
-            if (e.target === contactModal) {
-                contactModal.classList.remove('show');
-                document.body.style.overflow = 'auto';
-            }
-        });
-
-        // Contact form submission
-        const contactForm = document.getElementById('contactForm');
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const messageBox = document.createElement('div');
-            messageBox.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: #4CAF50;
-                color: white;
-                padding: 15px 25px;
-                border-radius: 8px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                z-index: 2000;
-                text-align: center;
-                font-size: 1.1rem;
-            `;
-            messageBox.textContent = 'Thank you for your message! We will get back to you soon.';
-            document.body.appendChild(messageBox);
-
-            setTimeout(() => {
-                messageBox.remove();
-                contactModal.classList.remove('show');
-                document.body.style.overflow = 'auto';
-                contactForm.reset();
-            }, 3000); 
-        });
-
-        // Back to top functionality
-        const backToTop = document.getElementById('backToTop');
-
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                backToTop.classList.add('show');
-            } else {
-                backToTop.classList.remove('show');
-            }
-        });
-
-        backToTop.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-
         // Enhanced hover effects for service cards
         document.querySelectorAll('.service-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
@@ -368,5 +94,4 @@
             observer.observe(card);
         });
     </script>
-</body>
-</html>
+{% endblock %}

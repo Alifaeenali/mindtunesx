@@ -59,7 +59,7 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 0 2rem;
 }
@@ -135,7 +135,7 @@ body {
 
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 2rem;
     margin-bottom: 4rem;
 }
@@ -162,7 +162,9 @@ body {
     transform: scaleX(0);
     transition: transform 0.3s ease;
 }
-
+.services-section{
+    height: auto;
+}
 .service-card:hover::before {
     transform: scaleX(1);
 }

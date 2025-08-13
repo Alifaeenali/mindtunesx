@@ -7,6 +7,28 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        .team-member-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+            gap: 15px;
+        }
+        
+        .team-member-image-preview {
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+        
+        .team-member-image-preview img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
         .file-preview {
             margin-top: 10px;
             padding: 10px;
@@ -103,6 +125,7 @@
             <div class="sidebar-header">
                 <h2><i class="fas fa-cog"></i> Admin Panel</h2>
             </div>
+
             <ul class="sidebar-menu">
                 <li>
                     <a href="{{ url_for('admin', section='nav') }}" 
@@ -159,6 +182,16 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ url_for('admin_jobs') }}">
+                        <i class="fas fa-briefcase"></i> Job Management
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin_applications') }}">
+                        <i class="fas fa-file-alt"></i> Job Applications
+                    </a>
+                </li>
+                <li>
                     <a href="{{ url_for('admin', section='footer') }}" 
                        class="{{ 'active' if current_section == 'footer' else '' }}">
                         <i class="fas fa-link"></i> Footer
@@ -171,6 +204,7 @@
                     </a>
                 </li>
             </ul>
+
         </nav>
 
         <main class="admin-main">
@@ -384,35 +418,46 @@
                                     <textarea id="achievement_subtitle" name="achievement_subtitle" rows="3" required>{{ data.get('achievement_subtitle', '') }}</textarea>
                                 </div>
                             </div>
-                            <div class="dynamic-section">
-                                <h3>Founders</h3>
-                                <div id="foundersContainer">
-                                    {% for founder in founders %}
-                                    <div class="founder-item">
-                                        <div class="form-group" style="flex: 1;">
-                                            <label>Founder Name</label>
-                                            <input type="text" name="founder_name" value="{{ founder.founder_name }}" required>
-                                            <label>Founder Role</label>
-                                            <input type="text" name="founder_role" value="{{ founder.founder_role }}" required>
-                                            <label>Founder Description</label>
-                                            <textarea name="founder_description" rows="3" required>{{ founder.founder_description }}</textarea>
-                                            <label>Founder Image</label>
-                                            <input type="file" name="founder_image" accept="image/*">
-                                            <input type="hidden" name="existing_founder_image" value="{{ founder.founder_image }}">
-                                        </div>
-                                        <div class="founder-image-preview">
-                                            <img src="{{ founder.founder_image }}" alt="{{ founder.founder_name }}">
-                                        </div>
-                                        <button type="button" class="remove-btn" onclick="removeFounder(this)">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                                <button type="button" class="add-btn" onclick="addFounder()">
-                                    <i class="fas fa-plus"></i> Add Founder
-                                </button>
-                            </div>
+<div class="dynamic-section">
+    <h3>Founders</h3>
+    <div id="foundersContainer">
+        {% for founder in founders %}
+        <div class="founder-item" data-index="{{ loop.index0 }}">
+            <div class="form-group" style="flex: 1;">
+                <label>Founder Name</label>
+                <input type="text" name="founder_name" value="{{ founder.founder_name }}" required>
+                
+                <label>Founder Role</label>
+                <input type="text" name="founder_role" value="{{ founder.founder_role }}" required>
+                
+                <label>Founder Description</label>
+                <textarea name="founder_description" rows="3" required>{{ founder.founder_description }}</textarea>
+                
+                <label>Founder Image</label>
+                <input type="file" name="founder_image_{{ loop.index0 }}" accept="image/*" onchange="previewFounderImage(this, {{ loop.index0 }})">
+                <input type="hidden" name="existing_founder_image" value="{{ founder.founder_image }}">
+                
+                {% if founder.founder_image %}
+                <small class="current-file">Current: {{ founder.founder_image.split('/')[-1] }}</small>
+                {% endif %}
+            </div>
+            <div class="founder-image-preview">
+                {% if founder.founder_image %}
+                <img src="{{ founder.founder_image }}" alt="{{ founder.founder_name }}" id="founder_preview_{{ loop.index0 }}">
+                {% else %}
+                <img src="/static/images/placeholder-person.jpg" alt="No image" id="founder_preview_{{ loop.index0 }}" style="opacity: 0.5;">
+                {% endif %}
+            </div>
+            <button type="button" class="remove-btn" onclick="removeFounder(this)">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    <button type="button" class="add-btn" onclick="addFounder()">
+        <i class="fas fa-plus"></i> Add Founder
+    </button>
+</div>
                             <div class="dynamic-section">
                                 <h3>Who We Work With</h3>
                                 <div id="workWithContainer">
@@ -436,6 +481,52 @@
                                     <i class="fas fa-plus"></i> Add Item
                                 </button>
                             </div>
+                        </div>
+                        <div class="dynamic-section">
+                            <h3>Team Members</h3>
+                            <div id="teamMembersContainer">
+                                {% for member in team_members %}
+                                <div class="team-member-item">
+                                    <div class="form-group" style="flex: 1;">
+                                        <label>Member Name</label>
+                                        <input type="text" name="team_member_name" value="{{ member.member_name }}" required>
+                                        <label>Member Position</label>
+                                        <input type="text" name="team_member_position" value="{{ member.member_position }}" required>
+                                        <label>Member Description</label>
+                                        <textarea name="team_member_description" rows="3" required>{{ member.member_description }}</textarea>
+                                        <label>Member Image</label>
+                                        <input type="file" name="team_member_image_{{ loop.index0 }}" accept="image/*">
+                                        <input type="hidden" name="existing_team_member_image" value="{{ member.member_image }}">
+                                    </div>
+                                    <div class="team-member-image-preview">
+                                        <img src="{{ member.member_image }}" alt="{{ member.member_name }}">
+                                    </div>
+                                    <button type="button" class="remove-btn" onclick="removeTeamMember(this)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                                {% if not team_members %}
+                                <div class="team-member-item">
+                                    <div class="form-group" style="flex: 1;">
+                                        <label>Member Name</label>
+                                        <input type="text" name="team_member_name" required>
+                                        <label>Member Position</label>
+                                        <input type="text" name="team_member_position" required>
+                                        <label>Member Description</label>
+                                        <textarea name="team_member_description" rows="3" required></textarea>
+                                        <label>Member Image</label>
+                                        <input type="file" name="team_member_image_0" accept="image/*">
+                                    </div>
+                                    <button type="button" class="remove-btn" onclick="removeTeamMember(this)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <button type="button" class="add-btn" onclick="addTeamMember()">
+                                <i class="fas fa-plus"></i> Add Team Member
+                            </button>
                         </div>
                         <button type="submit" class="btn-primary">
                             <i class="fas fa-save"></i> Update About Us
@@ -620,15 +711,29 @@
                     <form method="POST" class="admin-form">
                         <div class="form-section">
                             <h3><i class="fas fa-cogs"></i> Services Management</h3>
+                            <p style="margin-bottom: 20px; padding: 10px; background: #e3f2fd; border-radius: 5px; border-left: 4px solid #2196f3;">
+                                <strong>Icon Guide:</strong> Use FontAwesome classes like "fas fa-laptop-code", "fas fa-mobile-alt", "fas fa-cloud", etc. 
+                                <a href="https://fontawesome.com/icons" target="_blank" style="color: #1976d2;">Browse icons here</a>
+                            </p>
                             <div class="services-section">
                                 <div id="servicesContainer">
                                     {% for service in services %}
                                     <div class="service-item">
                                         <div class="form-group">
                                             <label>Service Heading</label>
-                                            <input type="text" name="serviceHead" value="{{ service.service_head }}" required>
+                                            <input type="text" name="service_head" value="{{ service.service_head }}" required>
+                                            
+                                            <label>Service Icon</label>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <input type="text" name="service_icon" value="{{ service.service_icon or 'fas fa-cogs' }}" placeholder="fas fa-cogs" required style="flex: 1;">
+                                                <div class="icon-preview" style="min-width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #f5f5f5; border-radius: 5px; border: 1px solid #ddd;">
+                                                    <i class="{{ service.service_icon or 'fas fa-cogs' }}" style="font-size: 18px; color: #333;"></i>
+                                                </div>
+                                            </div>
+                                            <small style="color: #666; font-size: 12px;">Examples: fas fa-laptop-code, fas fa-mobile-alt, fas fa-cloud, fas fa-shield-alt</small>
+                                            
                                             <label>Service Description</label>
-                                            <textarea name="serviceDesc" rows="3" required>{{ service.service_desc }}</textarea>
+                                            <textarea name="service_desc" rows="3" required>{{ service.service_desc }}</textarea>
                                         </div>
                                         <button type="button" class="remove-btn" onclick="removeService(this)"><i class="fas fa-trash"></i></button>
                                     </div>
@@ -637,9 +742,19 @@
                                     <div class="service-item">
                                         <div class="form-group">
                                             <label>Service Heading</label>
-                                            <input type="text" name="serviceHead" required>
+                                            <input type="text" name="service_head" required>
+                                            
+                                            <label>Service Icon</label>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <input type="text" name="service_icon" value="fas fa-cogs" placeholder="fas fa-cogs" required style="flex: 1;">
+                                                <div class="icon-preview" style="min-width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #f5f5f5; border-radius: 5px; border: 1px solid #ddd;">
+                                                    <i class="fas fa-cogs" style="font-size: 18px; color: #333;"></i>
+                                                </div>
+                                            </div>
+                                            <small style="color: #666; font-size: 12px;">Examples: fas fa-laptop-code, fas fa-mobile-alt, fas fa-cloud, fas fa-shield-alt</small>
+                                            
                                             <label>Service Description</label>
-                                            <textarea name="serviceDesc" rows="3" required></textarea>
+                                            <textarea name="service_desc" rows="3" required></textarea>
                                         </div>
                                         <button type="button" class="remove-btn" onclick="removeService(this)"><i class="fas fa-trash"></i></button>
                                     </div>
@@ -654,6 +769,9 @@
                             <i class="fas fa-save"></i> Update Services
                         </button>
                     </form>
+
+
+
 
                 {% elif current_section == 'footer' %}
                     <form method="POST" class="admin-form">
@@ -688,53 +806,53 @@
                     </form>
                 
                 {% elif current_section == 'contact_submissions' %}
-    <div class="form-section">
-        <h3><i class="fas fa-envelope"></i> Contact Submissions</h3>
-        {% if contact_submissions %}
-            <div style="overflow-x: auto;">
-                <table class="data-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-                    <thead>
-                        <tr style="background-color: #f8f9fa;">
-                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">ID</th>
-                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Name</th>
-                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Email</th>
-                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Subject</th>
-                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Message</th>
-                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for submission in contact_submissions %}
-                        <tr>
-                            <td style="padding: 12px; border: 1px solid #ddd;">{{ submission.id }}</td>
-                            <td style="padding: 12px; border: 1px solid #ddd;">{{ submission.name }}</td>
-                            <td style="padding: 12px; border: 1px solid #ddd;">
-                                <a href="mailto:{{ submission.email }}">{{ submission.email }}</a>
-                            </td>
-                            <td style="padding: 12px; border: 1px solid #ddd;">{{ submission.subject }}</td>
-                            <td style="padding: 12px; border: 1px solid #ddd; max-width: 300px;">
-                                <div style="max-height: 100px; overflow-y: auto; white-space: pre-wrap;">{{ submission.message }}</div>
-                            </td>
-                            <td style="padding: 12px; border: 1px solid #ddd;">
-                                {{ submission.submission_date.strftime('%Y-%m-%d %H:%M') if submission.submission_date else 'N/A' }}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div style="margin-top: 20px; padding: 15px; background-color: #e7f3ff; border-radius: 5px;">
-                <p><strong>Total Submissions:</strong> {{ contact_submissions|length }}</p>
-                <p><em>Click on email addresses to send replies directly.</em></p>
-            </div>
-        {% else %}
-            <div style="text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 5px;">
-                <i class="fas fa-inbox" style="font-size: 48px; color: #6c757d; margin-bottom: 20px;"></i>
-                <h4>No contact submissions found</h4>
-                <p style="color: #6c757d;">Contact form submissions will appear here once visitors start contacting you.</p>
-            </div>
-        {% endif %}
-    </div>
+                <div class="form-section">
+                    <h3><i class="fas fa-envelope"></i> Contact Submissions</h3>
+                    {% if contact_submissions %}
+                        <div style="overflow-x: auto;">
+                            <table class="data-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                                <thead>
+                                    <tr style="background-color: #f8f9fa;">
+                                        <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">ID</th>
+                                        <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Name</th>
+                                        <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Email</th>
+                                        <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Subject</th>
+                                        <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Message</th>
+                                        <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for submission in contact_submissions %}
+                                    <tr>
+                                        <td style="padding: 12px; border: 1px solid #ddd;">{{ submission.id }}</td>
+                                        <td style="padding: 12px; border: 1px solid #ddd;">{{ submission.name }}</td>
+                                        <td style="padding: 12px; border: 1px solid #ddd;">
+                                            <a href="mailto:{{ submission.email }}">{{ submission.email }}</a>
+                                        </td>
+                                        <td style="padding: 12px; border: 1px solid #ddd;">{{ submission.subject }}</td>
+                                        <td style="padding: 12px; border: 1px solid #ddd; max-width: 300px;">
+                                            <div style="max-height: 100px; overflow-y: auto; white-space: pre-wrap;">{{ submission.message }}</div>
+                                        </td>
+                                        <td style="padding: 12px; border: 1px solid #ddd;">
+                                            {{ submission.submission_date.strftime('%Y-%m-%d %H:%M') if submission.submission_date else 'N/A' }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="margin-top: 20px; padding: 15px; background-color: #e7f3ff; border-radius: 5px;">
+                            <p><strong>Total Submissions:</strong> {{ contact_submissions|length }}</p>
+                            <p><em>Click on email addresses to send replies directly.</em></p>
+                        </div>
+                    {% else %}
+                        <div style="text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 5px;">
+                            <i class="fas fa-inbox" style="font-size: 48px; color: #6c757d; margin-bottom: 20px;"></i>
+                            <h4>No contact submissions found</h4>
+                            <p style="color: #6c757d;">Contact form submissions will appear here once visitors start contacting you.</p>
+                        </div>
+                    {% endif %}
+                </div>
                 {% else %}
                     <div class="form-section">
                         <h3>Welcome to the Admin Panel!</h3>
@@ -744,5 +862,277 @@
             </div>
         </main>
     </div>
+<script>
+   // Updated JavaScript functions for admin panel
+
+    // Founders Management
+    let founderCounter = 0; // Will be set based on existing founders
+
+function addFounder() {
+    const container = document.getElementById('foundersContainer');
+    const newIndex = container.children.length;
+    
+    const founderItem = document.createElement('div');
+    founderItem.className = 'founder-item';
+    founderItem.setAttribute('data-index', newIndex);
+    
+    founderItem.innerHTML = `
+        <div class="form-group" style="flex: 1;">
+            <label>Founder Name</label>
+            <input type="text" name="founder_name" required>
+            
+            <label>Founder Role</label>
+            <input type="text" name="founder_role" required>
+            
+            <label>Founder Description</label>
+            <textarea name="founder_description" rows="3" required></textarea>
+            
+            <label>Founder Image</label>
+            <input type="file" name="founder_image_${newIndex}" accept="image/*" onchange="previewFounderImage(this, ${newIndex})">
+            <input type="hidden" name="existing_founder_image" value="">
+        </div>
+        <div class="founder-image-preview">
+            <img src="/static/images/placeholder-person.jpg" alt="No image" id="founder_preview_${newIndex}" style="opacity: 0.5;">
+        </div>
+        <button type="button" class="remove-btn" onclick="removeFounder(this)">
+            <i class="fas fa-trash"></i>
+        </button>
+    `;
+    
+    container.appendChild(founderItem);
+}
+
+    function removeFounder(button) {
+        const founderItem = button.closest('.founder-item');
+        const container = document.getElementById('foundersContainer');
+        
+        // Always allow removal - let backend handle validation
+        founderItem.remove();
+        
+        // If no founders left, add an empty one
+        if (container.children.length === 0) {
+            addFounder();
+        }
+    }
+
+    // Work Items Management
+    function addWorkItem() {
+        const container = document.getElementById('workWithContainer');
+        const newWorkItem = document.createElement('div');
+        newWorkItem.className = 'work-item';
+        newWorkItem.innerHTML = `
+            <div class="form-group" style="flex: 1;">
+                <label>Icon (e.g., fa-solid fa-code)</label>
+                <input type="text" name="work_icon" required>
+                <label>Title</label>
+                <input type="text" name="work_title" required>
+                <label>Description</label>
+                <textarea name="work_description" rows="3" required></textarea>
+            </div>
+            <button type="button" class="remove-btn" onclick="removeWorkItem(this)">
+                <i class="fas fa-trash"></i>
+            </button>
+        `;
+        container.appendChild(newWorkItem);
+    }
+
+    function removeWorkItem(button) {
+        const workItem = button.closest('.work-item');
+        const container = document.getElementById('workWithContainer');
+        
+        // Always allow removal
+        workItem.remove();
+        
+        // If no items left, add an empty one
+        if (container.children.length === 0) {
+            addWorkItem();
+        }
+    }
+
+    // Team Members Management
+    let teamMemberCounter = 0; // Will be set based on existing members
+
+    function addTeamMember() {
+        const container = document.getElementById('teamMembersContainer');
+        const newMember = document.createElement('div');
+        newMember.className = 'team-member-item';
+        newMember.innerHTML = `
+            <div class="form-group" style="flex: 1;">
+                <label>Member Name</label>
+                <input type="text" name="team_member_name" required>
+                <label>Member Position</label>
+                <input type="text" name="team_member_position" required>
+                <label>Member Description</label>
+                <textarea name="team_member_description" rows="3" required></textarea>
+                <label>Member Image</label>
+                <input type="file" name="team_member_image_${teamMemberCounter}" accept="image/*">
+            </div>
+            <button type="button" class="remove-btn" onclick="removeTeamMember(this)">
+                <i class="fas fa-trash"></i>
+            </button>
+        `;
+        container.appendChild(newMember);
+        teamMemberCounter++;
+    }
+
+    function removeTeamMember(button) {
+        const memberItem = button.closest('.team-member-item');
+        const container = document.getElementById('teamMembersContainer');
+        
+        // Always allow removal
+        memberItem.remove();
+        
+        // If no members left, add an empty one
+        if (container.children.length === 0) {
+            addTeamMember();
+        }
+    }
+
+    // Client Logos Management
+    function addClientLogo() {
+        const container = document.getElementById('clientLogosContainer');
+        const logoCount = container.children.length + 1;
+        const newLogo = document.createElement('div');
+        newLogo.className = 'client-logo-item';
+        newLogo.innerHTML = `
+            <div class="form-group" style="flex: 1;">
+                <label for="clientLogo${logoCount}">Client Logo ${logoCount}</label>
+                <input type="file" id="clientLogo${logoCount}" name="clientLogo${logoCount}" accept="image/*">
+            </div>
+            <button type="button" class="remove-btn" onclick="removeClientLogo(this)">
+                <i class="fas fa-trash"></i>
+            </button>
+        `;
+        container.appendChild(newLogo);
+    }
+
+    function removeClientLogo(button) {
+        const logoItem = button.closest('.client-logo-item');
+        logoItem.remove();
+    }
+
+    // Services Management
+    let serviceCounter = 1;
+    
+    function addService() {
+        serviceCounter++;
+        const container = document.getElementById('servicesContainer');
+        const newService = document.createElement('div');
+        newService.className = 'service-item';
+        newService.innerHTML = `
+            <div class="form-group">
+                <label>Service Heading</label>
+                <input type="text" name="service_head" required>
+                
+                <label>Service Icon</label>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="text" name="service_icon" value="fas fa-cogs" placeholder="fas fa-cogs" required style="flex: 1;" onchange="updateIconPreview(this)">
+                    <div class="icon-preview" style="min-width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #f5f5f5; border-radius: 5px; border: 1px solid #ddd;">
+                        <i class="fas fa-cogs" style="font-size: 18px; color: #333;"></i>
+                    </div>
+                </div>
+                <small style="color: #666; font-size: 12px;">Examples: fas fa-laptop-code, fas fa-mobile-alt, fas fa-cloud, fas fa-shield-alt</small>
+                
+                <label>Service Description</label>
+                <textarea name="service_desc" rows="3" required></textarea>
+            </div>
+            <button type="button" class="remove-btn" onclick="removeService(this)"><i class="fas fa-trash"></i></button>
+        `;
+        container.appendChild(newService);
+    }
+    
+    function removeService(button) {
+        const serviceItem = button.closest('.service-item');
+        const container = document.getElementById('servicesContainer');
+        if (container.children.length > 1) {
+            serviceItem.remove();
+        } else {
+            alert('At least one service must remain.');
+        }
+    }
+    
+    function updateIconPreview(input) {
+        const preview = input.parentNode.querySelector('.icon-preview i');
+        if (preview && input.value.trim()) {
+            preview.className = input.value.trim();
+        }
+    }
+    
+    // Common icon suggestions
+    const commonIcons = [
+        { class: 'fas fa-laptop-code', name: 'Web Development' },
+        { class: 'fas fa-mobile-alt', name: 'Mobile Apps' },
+        { class: 'fas fa-cloud', name: 'Cloud Services' },
+        { class: 'fas fa-shield-alt', name: 'Security' },
+        { class: 'fas fa-chart-line', name: 'Analytics' },
+        { class: 'fas fa-robot', name: 'AI/ML' },
+        { class: 'fas fa-microchip', name: 'IoT/Hardware' },
+        { class: 'fas fa-palette', name: 'Design/UI' },
+        { class: 'fas fa-cogs', name: 'Engineering' },
+        { class: 'fas fa-rocket', name: 'Innovation' },
+        { class: 'fas fa-brain', name: 'Consulting' },
+        { class: 'fas fa-database', name: 'Data Solutions' }
+    ];
+
+    // Add icon suggestions dropdown (optional enhancement)
+    function createIconSuggestions(input) {
+        const suggestions = document.createElement('div');
+        suggestions.className = 'icon-suggestions';
+        suggestions.style.cssText = `
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            width: 100%;
+            display: none;
+        `;
+        
+        commonIcons.forEach(icon => {
+            const item = document.createElement('div');
+            item.style.cssText = 'padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 10px;';
+            item.innerHTML = `<i class="${icon.class}"></i> <span>${icon.class}</span> <small style="color: #666;">${icon.name}</small>`;
+            item.addEventListener('click', () => {
+                input.value = icon.class;
+                updateIconPreview(input);
+                suggestions.style.display = 'none';
+            });
+            item.addEventListener('mouseenter', () => item.style.backgroundColor = '#f5f5f5');
+            item.addEventListener('mouseleave', () => item.style.backgroundColor = 'white');
+            suggestions.appendChild(item);
+        });
+        
+        return suggestions;
+    }
+
+    // Initialize counters on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set initial counters based on existing items
+        const existingFounders = document.querySelectorAll('#foundersContainer .founder-item');
+        founderCounter = existingFounders.length;
+        
+        const existingMembers = document.querySelectorAll('#teamMembersContainer .team-member-item');
+        teamMemberCounter = existingMembers.length;
+        
+        const existingServices = document.querySelectorAll('#servicesContainer .service-item');
+        serviceCounter = existingServices.length;
+        
+        // Add event listeners for icon preview updates
+        document.querySelectorAll('input[name="service_icon"]').forEach(input => {
+            input.addEventListener('input', function() {
+                updateIconPreview(this);
+            });
+        });
+        
+        console.log('Admin panel initialized:', {
+            founderCounter,
+            teamMemberCounter,
+            serviceCounter
+        });
+    });
+</script>
 </body>
 </html>
