@@ -1081,8 +1081,111 @@ def admin_update(section):
 
         return redirect(url_for('admin', section=section))
 
+    # Special handling for innovations section
+    elif section == 'innovations':
+        # Get the current data to preserve existing files if no new upload
+        current_data = fetch_data(table_mapping[section])
+        current_record = current_data[0] if current_data else {}
+        
+        # Get media type from form
+        media_type = form_data.get('innovationMediaType', 'image')
+        form_data['innovationMediaType'] = media_type
+        
+        # Handle file upload based on media type
+        if 'innovationFile' in uploaded_files:
+            # New file uploaded
+            new_file_path = uploaded_files['innovationFile']
+            
+            if media_type == 'image':
+                form_data['innovationImage'] = new_file_path
+                form_data['innovationVideo'] = ''  # Clear video field
+            else:  # video
+                form_data['innovationVideo'] = new_file_path
+                form_data['innovationImage'] = ''  # Clear image field
+        else:
+            # No new file uploaded, preserve existing based on media type
+            if media_type == 'image':
+                # Keep existing image, clear video
+                if current_record.get('innovationImage'):
+                    form_data['innovationImage'] = current_record['innovationImage']
+                form_data['innovationVideo'] = ''
+            else:  # video
+                # Keep existing video, clear image
+                if current_record.get('innovationVideo'):
+                    form_data['innovationVideo'] = current_record['innovationVideo']
+                form_data['innovationImage'] = ''
+
+        # Clean up empty values except for the media fields we explicitly set
+        filtered_form_data = {}
+        for k, v in form_data.items():
+            if k in ['innovationImage', 'innovationVideo', 'innovationMediaType']:
+                # Always include media-related fields even if empty (to clear them)
+                filtered_form_data[k] = v
+            elif v:  # Only include non-empty values for other fields
+                filtered_form_data[k] = v
+
+        if update_data(table_mapping[section], filtered_form_data):
+            flash('Innovations section updated successfully!', 'success')
+        else:
+            flash('Error updating innovations section. Please try again.', 'error')
+
+        return redirect(url_for('admin', section=section))
+
+    # Special handling for know section
+    elif section == 'know':
+        # Get the current data to preserve existing files if no new upload
+        current_data = fetch_data(table_mapping[section])
+        current_record = current_data[0] if current_data else {}
+        
+        # Get media type from form
+        media_type = form_data.get('knowMediaType', 'image')
+        form_data['knowMediaType'] = media_type
+        
+        # Handle file upload based on media type
+        if 'knowFile' in uploaded_files:
+            # New file uploaded
+            new_file_path = uploaded_files['knowFile']
+            form_data['knowFile'] = new_file_path
+            
+            if media_type == 'image':
+                form_data['knowImage'] = new_file_path
+                form_data['knowVideo'] = ''  # Clear video field
+            else:  # video
+                form_data['knowVideo'] = new_file_path
+                form_data['knowImage'] = ''  # Clear image field
+        else:
+            # No new file uploaded, preserve existing based on media type
+            if media_type == 'image':
+                # Keep existing image, clear video
+                if current_record.get('knowImage'):
+                    form_data['knowImage'] = current_record['knowImage']
+                    form_data['knowFile'] = current_record['knowImage']
+                form_data['knowVideo'] = ''
+            else:  # video
+                # Keep existing video, clear image
+                if current_record.get('knowVideo'):
+                    form_data['knowVideo'] = current_record['knowVideo']
+                    form_data['knowFile'] = current_record['knowVideo']
+                form_data['knowImage'] = ''
+
+        # Clean up empty values except for the media fields we explicitly set
+        filtered_form_data = {}
+        for k, v in form_data.items():
+            if k in ['knowImage', 'knowVideo', 'knowMediaType', 'knowFile']:
+                # Always include media-related fields even if empty (to clear them)
+                filtered_form_data[k] = v
+            elif v:  # Only include non-empty values for other fields
+                filtered_form_data[k] = v
+
+        if update_data(table_mapping[section], filtered_form_data):
+            flash('Know section updated successfully!', 'success')
+        else:
+            flash('Error updating know section. Please try again.', 'error')
+
+        return redirect(url_for('admin', section=section))
+
     # Special handling for services section
-    if section == 'services':
+    elif section == 'services':
         services_to_update = []
         service_heads = request.form.getlist('service_head')
         service_icons = request.form.getlist('service_icon')
@@ -1266,46 +1369,24 @@ def admin_update(section):
             flash('Error updating team members.', 'error')
 
         return redirect(url_for('admin', section=section))
-    # Update form_data with uploaded file paths
-    for field_name, file_path in uploaded_files.items():
-        form_data[field_name] = file_path
 
-    # Remove empty values to prevent overwriting existing data with blanks
-    form_data = {k: v for k, v in form_data.items() if v}
-
-    # Special handling for media type selection
-    if section in ['innovations', 'know']:
-        media_type_field = f"{section[:-1] if section.endswith('s') else section}MediaType"
-        if section == 'innovations':
-            media_type_field = "innovationMediaType"
-        elif section == 'know':
-            media_type_field = "knowMediaType"
-
-        if media_type_field in form_data:
-            if form_data[media_type_field] == 'video':
-                image_field = f"{section[:-1] if section.endswith('s') else section}Image"
-                if section == 'innovations':
-                    image_field = "innovationImage"
-                elif section == 'know':
-                    image_field = "knowImage"
-                if image_field in form_data: del form_data[image_field]
-            elif form_data[media_type_field] == 'image':
-                video_field = f"{section[:-1] if section.endswith('s') else section}Video"
-                if section == 'innovations':
-                    video_field = "innovationVideo"
-                elif section == 'know':
-                    video_field = "knowVideo"
-                if video_field in form_data: del form_data[video_field]
-
-    if form_data and update_data(table_mapping[section], form_data):
-        flash(f'{section_titles.get(section, "Section")} updated successfully!', 'success')
-    elif not form_data:
-        flash('No changes to update.', 'warning')
+    # For all other sections (nav, statistics, footer, etc.)
     else:
-        flash(f'Error updating {section_titles.get(section, "section")}. Please try again.', 'error')
+        # Update form_data with uploaded file paths
+        for field_name, file_path in uploaded_files.items():
+            form_data[field_name] = file_path
 
-    return redirect(url_for('admin', section=section))
+        # Remove empty values to prevent overwriting existing data with blanks
+        form_data = {k: v for k, v in form_data.items() if v}
 
+        if form_data and update_data(table_mapping[section], form_data):
+            flash(f'{section_titles.get(section, "Section")} updated successfully!', 'success')
+        elif not form_data:
+            flash('No changes to update.', 'warning')
+        else:
+            flash(f'Error updating {section_titles.get(section, "section")}. Please try again.', 'error')
+
+        return redirect(url_for('admin', section=section))
 # =================================================================================================
 # Admin Email Test Route
 # =================================================================================================

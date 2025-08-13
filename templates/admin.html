@@ -534,116 +534,142 @@
                     </form>
 
                 {% elif current_section == 'innovations' %}
-                    <form method="POST" enctype="multipart/form-data" class="admin-form">
-                        <div class="form-section">
-                            <h3><i class="fas fa-lightbulb"></i> Innovations Section</h3>
-                            <div class="form-grid">
-                                <div class="form-group full-width">
-                                    <label for="innovationSubHead">Sub-heading</label>
-                                    <input type="text" id="innovationSubHead" name="innovationSubHead" 
-                                           value="{{ data.get('innovationSubHead', '') }}" required>
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="innovationSubHead">Sub Heading</label>
+                                <input type="text" id="innovationSubHead" name="innovationSubHead" 
+                                    value="{{ data.get('innovationSubHead', '') }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="innovationHead">Main Heading</label>
+                                <input type="text" id="innovationHead" name="innovationHead" 
+                                    value="{{ data.get('innovationHead', '') }}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="innovationDescp">Description</label>
+                            <textarea id="innovationDescp" name="innovationDescp" rows="4">{{ data.get('innovationDescp', '') }}</textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="innovationl1">List Item 1</label>
+                                <input type="text" id="innovationl1" name="innovationl1" 
+                                    value="{{ data.get('innovationl1', '') }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="innovationl2">List Item 2</label>
+                                <input type="text" id="innovationl2" name="innovationl2" 
+                                    value="{{ data.get('innovationl2', '') }}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="innovationl3">List Item 3</label>
+                                <input type="text" id="innovationl3" name="innovationl3" 
+                                    value="{{ data.get('innovationl3', '') }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="innovationl4">List Item 4</label>
+                                <input type="text" id="innovationl4" name="innovationl4" 
+                                    value="{{ data.get('innovationl4', '') }}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <div class="media-upload-section">
+                                <div class="media-type-selector">
+                                    <label>Media Type:</label>
+                                    <input type="radio" id="innovationTypeImage" name="innovationMediaType" value="image"
+                                        {% if data.get('innovationMediaType', 'image') == 'image' %}checked{% endif %}>
+                                    <label for="innovationTypeImage">Image</label>
+                                    <input type="radio" id="innovationTypeVideo" name="innovationMediaType" value="video"
+                                        {% if data.get('innovationMediaType') == 'video' %}checked{% endif %}>
+                                    <label for="innovationTypeVideo">Video</label>
                                 </div>
-                                <div class="form-group full-width">
-                                    <label for="innovationHead">Main Heading</label>
-                                    <input type="text" id="innovationHead" name="innovationHead" 
-                                           value="{{ data.get('innovationHead', '') }}" required>
-                                </div>
-                                <div class="form-group full-width">
-                                    <label for="innovationDescp">Description</label>
-                                    <textarea id="innovationDescp" name="innovationDescp" rows="3" required>{{ data.get('innovationDescp', '') }}</textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="innovationl1">List Item 1</label>
-                                    <textarea id="innovationl1" name="innovationl1" rows="2" required>{{ data.get('innovationl1', '') }}</textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="innovationl2">List Item 2</label>
-                                    <textarea id="innovationl2" name="innovationl2" rows="2" required>{{ data.get('innovationl2', '') }}</textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="innovationl3">List Item 3</label>
-                                    <textarea id="innovationl3" name="innovationl3" rows="2" required>{{ data.get('innovationl3', '') }}</textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="innovationl4">List Item 4</label>
-                                    <textarea id="innovationl4" name="innovationl4" rows="2" required>{{ data.get('innovationl4', '') }}</textarea>
-                                </div>
-                                <div class="form-group full-width">
-                                    <div class="media-type-selector">
-                                        <label>Media Type:</label>
-                                        <input type="radio" id="innovationTypeImage" name="innovationMediaType" value="image" 
-                                               {{ 'checked' if data.get('innovationMediaType', 'image') == 'image' else '' }}>
-                                        <label for="innovationTypeImage">Image</label>
-                                        <input type="radio" id="innovationTypeVideo" name="innovationMediaType" value="video" 
-                                               {{ 'checked' if data.get('innovationMediaType') == 'video' else '' }}>
-                                        <label for="innovationTypeVideo">Video</label>
-                                    </div>
-                                    <label for="innovationFile">Upload Image or Video</label>
-                                    <input type="file" id="innovationFile" name="innovationFile" accept="image/*,video/*">
-                                    {% if data.get('innovationMediaType') == 'image' and data.get('innovationImage') %}
-                                        <div class="file-preview">
-                                            <p>Current Image:</p>
-                                            <img src="{{ data.get('innovationImage') }}" alt="Innovation Image">
-                                        </div>
-                                    {% elif data.get('innovationMediaType') == 'video' and data.get('innovationVideo') %}
+                                
+                                <label for="innovationFile">Upload Image or Video</label>
+                                <input type="file" id="innovationFile" name="innovationFile" accept="image/*,video/*">
+                                
+                                <!-- Current media preview -->
+                                <div class="current-media-preview">
+                                    {% if data.get('innovationMediaType') == 'video' and data.get('innovationVideo') %}
                                         <div class="file-preview">
                                             <p>Current Video:</p>
-                                            <video src="{{ data.get('innovationVideo') }}" controls></video>
+                                            <video src="{{ data.get('innovationVideo') }}" controls style="max-width: 300px;"></video>
+                                        </div>
+                                    {% elif data.get('innovationImage') %}
+                                        <div class="file-preview">
+                                            <p>Current Image:</p>
+                                            <img src="{{ data.get('innovationImage') }}" alt="Innovation Image" style="max-width: 300px;">
                                         </div>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
+                        
                         <button type="submit" class="btn-primary">
                             <i class="fas fa-save"></i> Update Innovations Section
                         </button>
                     </form>
 
+                
                 {% elif current_section == 'know' %}
-                    <form method="POST" enctype="multipart/form-data" class="admin-form">
-                        <div class="form-section">
-                            <h3><i class="fas fa-brain"></i> Know Section</h3>
-                            <div class="form-grid">
-                                <div class="form-group full-width">
-                                    <label for="knowHead">Main Heading</label>
-                                    <input type="text" id="knowHead" name="knowHead" 
-                                           value="{{ data.get('knowHead', '') }}" required>
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="knowHead">Heading</label>
+                                <input type="text" id="knowHead" name="knowHead" 
+                                    value="{{ data.get('knowHead', '') }}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="knowDescp">Description</label>
+                            <textarea id="knowDescp" name="knowDescp" rows="4">{{ data.get('knowDescp', '') }}</textarea>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <div class="media-upload-section">
+                                <div class="media-type-selector">
+                                    <label>Media Type:</label>
+                                    <input type="radio" id="knowTypeImage" name="knowMediaType" value="image"
+                                        {% if data.get('knowMediaType', 'image') == 'image' %}checked{% endif %}>
+                                    <label for="knowTypeImage">Image</label>
+                                    <input type="radio" id="knowTypeVideo" name="knowMediaType" value="video"
+                                        {% if data.get('knowMediaType') == 'video' %}checked{% endif %}>
+                                    <label for="knowTypeVideo">Video</label>
                                 </div>
-                                <div class="form-group full-width">
-                                    <label for="knowDescp">Description</label>
-                                    <textarea id="knowDescp" name="knowDescp" rows="3" required>{{ data.get('knowDescp', '') }}</textarea>
-                                </div>
-                                <div class="form-group full-width">
-                                    <div class="media-type-selector">
-                                        <label>Media Type:</label>
-                                        <input type="radio" id="knowTypeImage" name="knowMediaType" value="image" 
-                                               {{ 'checked' if data.get('knowImage') and not data.get('knowVideo') else '' }}>
-                                        <label for="knowTypeImage">Image</label>
-                                        <input type="radio" id="knowTypeVideo" name="knowMediaType" value="video" 
-                                               {{ 'checked' if data.get('knowVideo') else '' }}>
-                                        <label for="knowTypeVideo">Video</label>
-                                    </div>
-                                    <label for="knowFile">Upload Image or Video</label>
-                                    <input type="file" id="knowFile" name="knowFile" accept="image/*,video/*">
-                                    {% if data.get('knowImage') %}
-                                        <div class="file-preview">
-                                            <p>Current Image:</p>
-                                            <img src="{{ data.get('knowImage') }}" alt="Know Image">
-                                        </div>
-                                    {% elif data.get('knowVideo') %}
+                                
+                                <label for="knowFile">Upload Image or Video</label>
+                                <input type="file" id="knowFile" name="knowFile" accept="image/*,video/*">
+                                
+                                <!-- Current media preview -->
+                                <div class="current-media-preview">
+                                    {% if data.get('knowMediaType') == 'video' and data.get('knowVideo') %}
                                         <div class="file-preview">
                                             <p>Current Video:</p>
-                                            <video src="{{ data.get('knowVideo') }}" controls></video>
+                                            <video src="{{ data.get('knowVideo') }}" controls style="max-width: 300px;"></video>
+                                        </div>
+                                    {% elif data.get('knowImage') %}
+                                        <div class="file-preview">
+                                            <p>Current Image:</p>
+                                            <img src="{{ data.get('knowImage') }}" alt="Know Image" style="max-width: 300px;">
                                         </div>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
+                        
                         <button type="submit" class="btn-primary">
                             <i class="fas fa-save"></i> Update Know Section
                         </button>
                     </form>
 
+                
                 {% elif current_section == 'statistics' %}
                     <form method="POST" enctype="multipart/form-data" class="admin-form">
                         <div class="form-section">
@@ -863,6 +889,26 @@
         </main>
     </div>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    function updateMediaPreview(sectionPrefix) {
+        const imageRadio = document.getElementById(sectionPrefix + 'TypeImage');
+        const videoRadio = document.getElementById(sectionPrefix + 'TypeVideo');
+        
+        if (imageRadio && videoRadio) {
+            [imageRadio, videoRadio].forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // The preview will be updated on form submission
+                    // This just provides visual feedback that the selection changed
+                    console.log('Media type changed to:', this.value);
+                });
+            });
+        }
+    }
+    
+    // Initialize for both sections
+    updateMediaPreview('innovation');
+    updateMediaPreview('know');
+});
    // Updated JavaScript functions for admin panel
 
     // Founders Management
